@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>鬼怒川もみじクエスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#131834;--bg2:#1c2346;--panel:#222b54;--line:#2f3a6b;--ink:#f4f1ea;--muted:#9aa3c7;
+  --or:#ff8a3d;--gold:#ffc94a;--red:#ff5a4e;--green:#3ddc97;--pink:#ff6fae;--blue:#5fb4ff;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg)}
+body{font-family:'M PLUS Rounded 1c',-apple-system,sans-serif;color:var(--ink);font-weight:500;-webkit-text-size-adjust:100%}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer;border:none;color:inherit}
+input,textarea{font-family:inherit;font-size:16px}
+.dg{font-family:'Dela Gothic One',sans-serif;font-weight:400;letter-spacing:.02em}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+
+header{background:linear-gradient(135deg,#2a1d4f 0%,#4a1f3d 55%,#7a2a2a 100%);padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;flex-shrink:0;position:relative;overflow:hidden;border-bottom:1px solid #3b2c5e}
+header::after{content:"🍁";position:absolute;right:52px;top:-10px;font-size:70px;opacity:.13;transform:rotate(20deg)}
+.hrow{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.hav{font-size:28px;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.hname{flex:1;min-width:0}
+.hname b{display:block;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hname span{font-size:12px;color:var(--gold)}
+.hpt{text-align:right}
+.hpt b{font-size:24px;line-height:1;color:var(--gold)}
+.hpt small{display:block;font-size:10px;color:var(--muted)}
+.hgear{background:rgba(255,255,255,.12);width:34px;height:34px;border-radius:10px;font-size:15px;flex-shrink:0}
+.hbar{height:6px;background:rgba(255,255,255,.12);border-radius:9px;margin-top:9px;overflow:hidden;position:relative;z-index:1}
+.hbar i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--gold));border-radius:9px;transition:width .6s}
+
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:12px 12px 26px}
+.view{display:none}.view.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2{font-size:19px;margin:6px 2px 12px;display:flex;align-items:center;gap:8px}
+h2 small{font-family:'M PLUS Rounded 1c';font-size:12px;color:var(--muted);font-weight:700}
+.box{background:var(--panel);border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid var(--line)}
+
+nav{display:flex;background:var(--bg2);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);flex-shrink:0}
+nav button{flex:1;background:none;padding:8px 0 6px;color:var(--muted);font-size:10.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button i{font-style:normal;font-size:21px;filter:grayscale(.8);opacity:.6}
+nav button.on{color:var(--gold)}
+nav button.on i{filter:none;opacity:1}
+
+/* schedule */
+.count{text-align:center;background:linear-gradient(135deg,#2d2560,#4b2347);border:1px solid #5a3b78}
+.count .s{font-size:12.5px;color:var(--muted)}
+.count .big{font-size:26px;margin:4px 0;color:var(--gold)}
+.dayttl{font-size:15px;margin:18px 4px 8px;color:var(--or)}
+.ti{display:flex;gap:10px;position:relative;padding-bottom:12px}
+.ti::before{content:"";position:absolute;left:19px;top:40px;bottom:0;width:2px;background:var(--line)}
+.ti:last-child::before{display:none}
+.tdot{width:40px;height:40px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;z-index:1}
+.tbody{flex:1;background:var(--panel);border-radius:14px;padding:9px 12px;border:1px solid var(--line)}
+.ttime{font-size:13px;font-weight:800;color:var(--or)}
+.tttl{font-size:15px;font-weight:800;margin:1px 0}
+.tsub{font-size:12px;color:var(--muted);line-height:1.5}
+.tchip{display:inline-block;margin-top:7px;font-size:11.5px;background:rgba(255,138,61,.15);color:var(--or);padding:4px 10px;border-radius:20px;font-weight:800}
+.ti.past{opacity:.45}
+.ti.now .tdot{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,201,74,.2);animation:pulse 1.6s infinite}
+.ti.now .tbody{border:2px solid var(--gold)}
+.nowtag{display:inline-block;background:var(--gold);color:#2a1d0a;font-size:10.5px;padding:1px 7px;border-radius:9px;margin-left:6px;vertical-align:2px}
+@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(255,201,74,.05)}}
+
+/* alert */
+.alert{display:block;width:100%;text-align:left;background:linear-gradient(135deg,#ff5a4e,#ff8a3d);border-radius:16px;padding:12px 14px;margin-bottom:12px;color:#fff;animation:blink 1.4s infinite;box-shadow:0 4px 18px rgba(255,90,78,.35)}
+.alert b{display:block;font-size:13px}
+.alert span{display:block;font-size:16px;font-weight:800;margin-top:2px}
+.alert small{font-size:12px;opacity:.9}
+@keyframes blink{50%{box-shadow:0 4px 30px rgba(255,90,78,.7)}}
+
+/* missions */
+.seg{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin-bottom:12px;border:1px solid var(--line)}
+.seg button{flex:1;background:none;padding:9px 4px;border-radius:10px;font-weight:800;font-size:13.5px;color:var(--muted)}
+.seg button.on{background:var(--panel);color:var(--gold)}
+.rules{font-size:12.5px;line-height:1.7;background:rgba(255,201,74,.1);border:1px solid rgba(255,201,74,.3);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.mphase{font-size:12.5px;font-weight:800;color:var(--muted);margin:16px 4px 6px}
+.mi{display:flex;align-items:center;gap:11px;background:var(--panel);border-radius:14px;padding:10px 12px;margin-bottom:8px;width:100%;text-align:left;border:1px solid var(--line)}
+.mi .me{width:48px;height:48px;border-radius:12px;background:var(--bg2) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.mi .mt{flex:1;min-width:0}
+.mi .mt b{font-size:15px;display:block;font-weight:800}
+.mi .mt span{font-size:12px;color:var(--muted)}
+.mi .mp{font-size:12px;font-weight:800;color:#fff;padding:4px 8px;border-radius:9px;flex-shrink:0}
+.mi.done{border-color:rgba(61,220,151,.5);background:linear-gradient(90deg,rgba(61,220,151,.12),var(--panel))}
+.mi.done .mp{background:var(--green)!important;color:#0d2a1e}
+.mi.lock{opacity:.5}
+.rN{background:#6c7499}.rR{background:#5f86c9}.rSR{background:linear-gradient(90deg,#d99a12,#ffc94a);color:#3a2600!important}.rUR{background:linear-gradient(90deg,#ff5a8a,#ffb84a,#4fe3a8,#4fa8ff,#b06bff)}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:8px;margin-left:4px;vertical-align:1px;font-weight:800}
+
+/* guerrilla list */
+.gi{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px;width:100%;text-align:left}
+.gi .gt{font-size:12px;color:var(--muted);font-weight:800;width:62px;flex-shrink:0;line-height:1.3}
+.gi .gb{flex:1;font-size:14px;font-weight:800}
+.gi .gs{font-size:12px;flex-shrink:0}
+.gi.act{border:2px solid var(--red);background:rgba(255,90,78,.12)}
+.gi.done{border-color:rgba(61,220,151,.5)}
+
+/* cards */
+.zstat{display:flex;gap:8px;margin-bottom:12px}
+.zstat div{flex:1;background:var(--panel);border-radius:12px;padding:8px 4px;text-align:center;border:1px solid var(--line)}
+.zstat b{display:block;font-size:20px;color:var(--gold)}
+.zstat span{font-size:10.5px;color:var(--muted)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.cgrid>button{padding:0;background:none}
+.tcard{position:relative;aspect-ratio:63/88;border-radius:9px;padding:4px;background:#5a6182;overflow:hidden;width:100%;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.tcard .in{position:absolute;inset:4px;border-radius:6px;background:#fdfaf3;color:#2a2238;display:flex;flex-direction:column;overflow:hidden}
+.tcard .tn{font-size:9px;font-weight:800;padding:3px 4px 2px;display:flex;justify-content:space-between;gap:2px;white-space:nowrap}
+.tcard .tn span{overflow:hidden;text-overflow:ellipsis}
+.tcard .tn em{font-style:normal;color:var(--red)}
+.tcard .ta{flex:1;margin:0 3px;border-radius:4px;background:#efe6d8 center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:30px}
+.tcard .tf{font-size:8px;padding:2px 4px 3px;display:flex;justify-content:space-between;color:#8a7f95}
+.tcard.c-R{background:linear-gradient(135deg,#cfe0ff,#5f86c9,#e4eeff,#4e72b5)}
+.tcard.c-SR{background:linear-gradient(135deg,#ffeaa8,#d99a12,#fff3c4,#b07d10)}
+.tcard.c-UR{background:linear-gradient(135deg,#ff9aa2,#ffd28a,#9de3b6,#9cc7ff,#d6a6ff)}
+.tcard.c-SR::after,.tcard.c-UR::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.7) 45%,transparent 60%);background-size:250% 100%;animation:shine 2.8s infinite;pointer-events:none;mix-blend-mode:soft-light}
+.tcard.c-UR::after{background:linear-gradient(115deg,transparent 20%,rgba(255,120,200,.55) 35%,rgba(120,220,255,.55) 50%,rgba(255,240,120,.55) 65%,transparent 80%);background-size:250% 100%;mix-blend-mode:overlay}
+@keyframes shine{0%{background-position:150% 0}100%{background-position:-100% 0}}
+.tcard.locked{background:#2a3260;box-shadow:none}
+.tcard.locked .in{background:repeating-linear-gradient(45deg,#232b55,#232b55 6px,#1f2750 6px,#1f2750 12px);align-items:center;justify-content:center}
+.tcard.locked .q{font-size:28px;color:#3c4782;font-family:'Dela Gothic One'}
+.tcard.locked .qn{font-size:9px;color:#4a5694;margin-top:2px}
+.tcard.big{width:min(76vw,300px);padding:7px;border-radius:14px}
+.tcard.big .in{inset:7px;border-radius:9px}
+.tcard.big .tn{font-size:15px;padding:7px 9px 5px}
+.tcard.big .ta{font-size:80px;margin:0 7px;border-radius:7px}
+.tcard.big .tf{font-size:12px;padding:5px 9px 7px}
+.tflav{font-size:12px;line-height:1.5;padding:4px 9px 0;color:#4d4257}
+
+/* quiz */
+.qwrap{text-align:center}
+.qprog{font-size:13px;color:var(--muted);margin-bottom:6px}
+.qq{font-size:19px;font-weight:800;line-height:1.55;margin:8px 0 16px;min-height:60px}
+.qopt{display:block;width:100%;padding:14px;margin-bottom:9px;border-radius:14px;background:var(--panel);border:2px solid var(--line);font-size:16px;font-weight:800;text-align:left}
+.qopt.ok{border-color:var(--green);background:rgba(61,220,151,.18)}
+.qopt.ng{border-color:var(--red);background:rgba(255,90,78,.15)}
+.qexp{font-size:13.5px;line-height:1.7;background:var(--bg2);border-radius:12px;padding:10px 12px;margin:6px 0 12px;text-align:left}
+.qbig{font-size:64px;color:var(--gold);line-height:1.1}
+
+/* album & results */
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.agrid button{aspect-ratio:1;border-radius:8px;background:#2a3260 center/cover no-repeat;position:relative;padding:0}
+.agrid button span{position:absolute;left:3px;bottom:3px;font-size:13px;background:rgba(0,0,0,.55);border-radius:6px;padding:0 4px}
+.btn{display:block;width:100%;padding:14px;border-radius:14px;font-size:16px;font-weight:800;color:#2a1600;background:linear-gradient(135deg,var(--gold),var(--or));box-shadow:0 3px 0 #b85a1c}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #b85a1c}
+.btn.sub{background:var(--panel);color:var(--ink);box-shadow:0 3px 0 #10142b;border:1px solid var(--line)}
+.btn.red{background:linear-gradient(135deg,#ff5a4e,#ff8a3d);color:#fff}
+.btn+.btn{margin-top:10px}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 10px;line-height:1.8}
+.titles{display:flex;flex-wrap:wrap;gap:6px}
+.title{font-size:12.5px;font-weight:800;padding:6px 10px;border-radius:20px;background:var(--bg2);border:1px solid var(--line);color:var(--muted)}
+.title.on{background:rgba(255,201,74,.15);border-color:var(--gold);color:var(--gold)}
+.res{text-align:center;padding:10px 0}
+.res .av{font-size:80px;line-height:1}
+.res .nm{font-size:28px;margin-top:6px}
+.res .pt{font-size:56px;color:var(--gold);line-height:1.1;margin-top:8px}
+.res .rk{font-size:18px;color:var(--or);margin-top:4px}
+
+/* overlay */
+.ov{position:fixed;inset:0;background:rgba(5,8,20,.7);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.ov.on{display:flex;animation:fade .2s}
+.sheet{background:var(--bg2);width:100%;max-width:520px;max-height:92dvh;border-radius:22px 22px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 16px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative;border-top:1px solid var(--line)}
+.ov.center{align-items:center}
+.ov.center .sheet{border-radius:22px;width:92%;text-align:center;border:1px solid var(--line)}
+.x{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:10px;background:var(--panel);font-size:15px}
+.mhead{display:flex;gap:12px;align-items:center;margin:4px 40px 12px 0}
+.mhead .me{font-size:40px}
+.mhead b{font-size:19px;display:block;margin-bottom:3px}
+.mdesc{font-size:14.5px;line-height:1.75;margin-bottom:10px}
+.note{font-size:12.5px;background:rgba(255,90,78,.12);border:1px solid rgba(255,90,78,.35);border-radius:10px;padding:8px 10px;margin-bottom:10px;line-height:1.6}
+.hint{font-size:12.5px;background:rgba(95,180,255,.1);border:1px solid rgba(95,180,255,.3);border-radius:10px;padding:8px 10px;margin-bottom:10px;line-height:1.6}
+.preview{width:100%;border-radius:14px;margin-bottom:10px;display:block}
+textarea,.inp{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:var(--panel);color:var(--ink);margin-bottom:10px}
+textarea{min-height:90px;resize:none}
+.stars{display:flex;justify-content:center;gap:6px;margin:4px 0 12px}
+.stars button{font-size:34px;background:none;filter:grayscale(1);opacity:.35}
+.stars button.on{filter:none;opacity:1}
+.counter{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 0 12px}
+.counter button{width:62px;height:62px;border-radius:50%;background:var(--panel);border:1px solid var(--line);font-size:30px;font-weight:800}
+.counter b{font-size:56px;color:var(--gold);min-width:90px;text-align:center}
+.field{margin-bottom:12px;text-align:left}
+.field label{font-size:13px;font-weight:800;display:block;margin-bottom:6px}
+.avs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.avs button{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 0;font-size:28px}
+.avs button.on{border-color:var(--gold);background:rgba(255,201,74,.12)}
+.reveal{perspective:1000px;margin:6px auto 10px;display:inline-block}
+.flip{animation:flip 1.1s cubic-bezier(.3,1.4,.5,1) forwards}
+@keyframes flip{0%{transform:rotateY(180deg) scale(.6)}100%{transform:rotateY(0) scale(1)}}
+.rtitle{font-size:22px;color:var(--gold);margin-top:4px}
+.rsub{font-size:13px;color:var(--muted);margin:4px 0 12px}
+.leaf{position:fixed;top:-40px;z-index:99;pointer-events:none;font-size:26px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;font-weight:800;z-index:120;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:.9}
+#memImg{width:100%;border-radius:12px;-webkit-touch-callout:default}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hrow">
+      <div class="hav" id="hAv">🍁</div>
+      <div class="hname"><b class="dg" id="hName">鬼怒川もみじクエスト</b><span id="hRank">プレイヤー登録しよう</span></div>
+      <div class="hpt"><b class="dg" id="hPt">0</b><small>POINT</small></div>
+      <button class="hgear" id="gear" aria-label="設定">⚙️</button>
+    </div>
+    <div class="hbar"><i id="hBar" style="width:0"></i></div>
+  </header>
+  <main id="main">
+    <section class="view on" id="v-plan"></section>
+    <section class="view" id="v-mission"></section>
+    <section class="view" id="v-quiz"></section>
+    <section class="view" id="v-zukan"></section>
+    <section class="view" id="v-album"></section>
+  </main>
+  <nav>
+    <button data-v="plan" class="on"><i>🗓️</i>しおり</button>
+    <button data-v="mission"><i>🎯</i>ミッション</button>
+    <button data-v="quiz"><i>🧠</i>クイズ</button>
+    <button data-v="zukan"><i>🃏</i>ずかん</button>
+    <button data-v="album"><i>🏆</i>アルバム</button>
+  </nav>
+</div>
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<input type="file" accept="image/*" id="fileIn" style="display:none">
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== データ ===================== */
+const SCHEDULE=[
+ {id:'d1-train1',d:'2026-11-14',hm:'08:03',lb:'8:03',e:'🚄',t:'北千住駅 出発',s:'スペーシアX1号（東武日光行き）'},
+ {id:'d1-imaichi',d:'2026-11-14',hm:'09:30',lb:'9:30',e:'🚉',t:'下今市駅 到着',s:'〜少し休憩〜'},
+ {id:'d1-train2',d:'2026-11-14',hm:'10:04',lb:'10:04',e:'🚃',t:'下今市駅 出発',s:'東武鬼怒川線（新藤原行き）'},
+ {id:'d1-kinugawa',d:'2026-11-14',hm:'10:26',lb:'10:26',e:'♨️',t:'鬼怒川温泉駅 到着',s:'ホテルへ向かうよ'},
+ {id:'d1-hotel',d:'2026-11-14',hm:'11:00',lb:'11:00',e:'🏨',t:'日光きぬ川ホテル三日月 到着',s:'ウェルカムランチ（11:00〜16:00）'},
+ {id:'d1-free',d:'2026-11-14',hm:'12:30',lb:'午後',e:'🏊',t:'自由時間（自由研究）',s:'🏊 プール 10:00〜18:00（最終入場17:00）／🏓 アクティビティ／♨️ 温泉'},
+ {id:'d1-dinner',d:'2026-11-14',hm:'18:00',lb:'18:00頃',e:'🍽️',t:'ディナービュッフェ',s:'最終21:00 ／ そのあと自由時間'},
+ {id:'d1-yashoku',d:'2026-11-14',hm:'21:30',lb:'21:30',e:'🌙',t:'ナイトタイム夜食',s:'21:30〜22:30'},
+ {id:'d2-breakfast',d:'2026-11-15',hm:'07:30',lb:'7:30頃',e:'🍳',t:'朝食ビュッフェ',s:'7:00〜9:00'},
+ {id:'d2-checkout',d:'2026-11-15',hm:'10:00',lb:'10:00',e:'👋',t:'チェックアウト',s:'自由時間／🏊 プール／🏓 アクティビティ／🌿 鬼怒川散策'},
+ {id:'d2-lunch',d:'2026-11-15',hm:'12:00',lb:'12:00頃',e:'🍛',t:'ウェルカムランチ',s:'11:00〜 ／ そのあと自由時間'},
+ {id:'d2-train',d:'2026-11-15',hm:'15:19',lb:'15:19',e:'🚄',t:'鬼怒川温泉駅 出発',s:'スペーシアX8号（浅草行き）'},
+ {id:'d2-home',d:'2026-11-15',hm:'17:21',lb:'17:21',e:'🏠',t:'北千住駅 到着',s:'おつかれさま！'},
+];
+SCHEDULE.forEach(s=>s.ts=new Date(s.d+'T'+s.hm+':00+09:00').getTime());
+const TRIP_START=SCHEDULE[0].ts,TRIP_END=SCHEDULE[SCHEDULE.length-1].ts;
+
+// type: photo / text / review(写真任意+星+コメント) / counter / num
+const MISSIONS=[
+ {id:'m01',day:1,ph:'d1-train1',e:'🚄',t:'出発進行！',pt:10,r:'N',type:'photo',
+  d:'スペーシアXに乗って、自分の席に座ってから「出発進行！」ポーズで1枚。',note:'🚫 ホームでは写真を撮らないでね。車内でも通路に立たず、座ってから撮ろう。',fl:'冒険はここから始まった。'},
+ {id:'m02',day:1,ph:'d1-train1',e:'🏔️',t:'車窓ハンター',pt:10,r:'N',type:'photo',
+  d:'電車の窓から見えた「いちばんかっこいい景色」を撮ってみよう。山・川・鉄橋、なんでもOK。',hint:'💡 窓にスマホをくっつけると反射が消えてキレイに撮れるよ。',fl:'一瞬で通りすぎる景色をゲット。'},
+ {id:'m03',day:1,ph:'d1-kinugawa',e:'👹',t:'「鬼」の字ハンター',pt:20,r:'R',type:'photo',
+  d:'鬼怒川エリアには「鬼」の字がいっぱい。駅前・看板・おみやげなどで「鬼」の字を見つけて撮ってみよう！',hint:'💡 いくつ見つけたか友だちと勝負しても面白いよ。',fl:'鬼怒川の「鬼」は、昔あばれ川だったことに由来するという説がある。'},
+ {id:'m04',day:1,ph:'d1-hotel',e:'🦘',t:'全員空中ジャンプ',pt:30,r:'SR',type:'photo',
+  d:'6年生3人全員が「同時に空中に浮いてる」写真にチャレンジしよう。だれか1人でも足がついてたら、もう1回！',hint:'💡 シャッターボタン長押しで連写→いちばん良い1枚をえらぼう。大人に撮ってもらってもOK。',note:'🏨 ほかのお客さんのじゃまにならない、外の広い場所で。',fl:'重力に勝った瞬間。'},
+ {id:'m05',day:1,ph:'d1-hotel',e:'🍛',t:'ランチ審査員',pt:20,r:'R',type:'review',
+  d:'ウェルカムランチの料理を1品えらんで、★5段階で審査してみよう。ひとことレビューもつけてね。',fl:'グルメ審査員の本気レビュー。'},
+ {id:'m06',day:1,ph:'d1-free',e:'♨️',t:'お風呂めぐりカウンター',pt:20,r:'R',type:'counter',goal:5,
+  d:'このホテルは15種類以上のお風呂がある！入ったお風呂の数を数えてみよう。5種類でクリア、10種類で「温泉マスター」の称号。',note:'🚫 温泉・プール・脱衣所は撮影禁止。スマホはロッカーへ。出てからカウントしてね。',fl:'のぼせないように水分補給も忘れずに。'},
+ {id:'m07',day:1,ph:'d1-free',e:'🏓',t:'卓球ラリー記録',pt:20,r:'R',type:'num',unit:'回',
+  d:'卓球でラリーが何回続いたか、いちばん良い記録を入れてね。20回以上で「ラリー王」の称号。',fl:'つづけ、つづけ、つづけ…！'},
+ {id:'m08',day:1,ph:'d1-free',e:'🪄',t:'トリックアート写真',pt:30,r:'SR',type:'photo',
+  d:'遠近法を使って、友だちを「手のひらに乗せる」「指でつまむ」など、ありえない写真を撮ってみよう。',hint:'💡 友だちには遠くに立ってもらって、手前の手とピントを合わせるのがコツ。',fl:'ウソみたいなホントの写真。'},
+ {id:'m09',day:1,ph:'d1-free',e:'🍁',t:'渓谷もみじビュー',pt:10,r:'N',type:'photo',
+  d:'ホテルの窓やテラスから、鬼怒川の渓谷と紅葉を1枚に入れて撮ってみよう。',fl:'11月の鬼怒川は紅葉シーズン。'},
+ {id:'m10',day:1,ph:'d1-dinner',e:'🎨',t:'5色プレートチャレンジ',pt:20,r:'R',type:'photo',
+  d:'ディナービュッフェで「赤・黄・緑・白・黒（茶）」の5色がそろった1皿をつくって撮ってみよう。',note:'🍽️ 食べきれる量だけ。残さないのがルール！',fl:'栄養バランスも見た目も満点。'},
+ {id:'m11',day:1,ph:'d1-dinner',e:'🍰',t:'デザート審査員',pt:10,r:'N',type:'review',
+  d:'デザートコーナーで「王様」だと思うスイーツを★で審査してみよう。',fl:'デザートは別腹。'},
+ {id:'m12',day:1,ph:'d1-yashoku',e:'🌙',t:'夜ふかし夜食',pt:30,r:'SR',type:'photo',win:['2026-11-14T21:30:00+09:00','2026-11-14T23:00:00+09:00'],
+  d:'ナイトタイム夜食（21:30〜22:30）の時間だけ挑戦できる、限定ミッション！',fl:'夜にこっそり食べるごはんは特別な味。'},
+ {id:'m13',day:1,ph:'d1-yashoku',e:'🏅',t:'1日目のMVP',pt:10,r:'N',type:'text',
+  d:'今日いちばん面白かった人は？ その人と、何があったかを書いてみよう。',fl:'今日のMVPはこの人。'},
+ {id:'m14',day:2,ph:'d2-breakfast',e:'🌅',t:'ねぐせチェック',pt:10,r:'N',type:'photo',
+  d:'起きたらすぐ、今日のねぐせを記録しておこう。（見せたくない人は窓の外の朝の景色でもOK）',fl:'ねぐせも旅の思い出。'},
+ {id:'m15',day:2,ph:'d2-checkout',e:'🍂',t:'紅葉グラデーション',pt:30,r:'SR',type:'photo',
+  d:'落ち葉を「緑→黄→オレンジ→赤」の順にならべて撮ってみよう。4色そろえばクリア！',note:'🌿 落ちている葉っぱを使ってね。木から取らないでね。',fl:'葉っぱが赤くなるのはアントシアニン、黄色はカロテノイドという色素のしわざ。'},
+ {id:'m16',day:2,ph:'d2-checkout',e:'🌊',t:'鬼怒川の流れ',pt:10,r:'N',type:'photo',
+  d:'鬼怒川の流れが見えるところで、川の写真を撮ってみよう。',note:'⚠️ 川や崖のふちには近づかないでね。大人のそばで撮ろう。',fl:'岩をけずってできた渓谷。'},
+ {id:'m17',day:2,ph:'d2-checkout',e:'👤',t:'影アート',pt:20,r:'R',type:'photo',
+  d:'日なたで、3人の影を組み合わせて「文字」か「形」をつくって撮ってみよう。何に見えるかは自由！',hint:'💡 くもりの日は、3人の手を重ねた写真でもOK。',fl:'太陽がつくったアート作品。'},
+ {id:'m18',day:2,ph:'d2-lunch',e:'💰',t:'おみやげ1000円作戦',pt:20,r:'R',type:'text',
+  d:'もし1000円もらえたら、おみやげコーナーで何を買う？ 品名・値段・理由を書いてみよう。（本当に買うかは親とそうだん）',fl:'限られた予算でベストをえらぶ力。'},
+ {id:'m19',day:2,ph:'d2-lunch',e:'📸',t:'6人集合写真',pt:30,r:'SR',type:'photo',
+  d:'ちびっこもふくめて、子ども6人全員の集合写真を撮ろう。ポーズは6年生で考えてみてね！',fl:'幼なじみ6人の、この秋だけの1枚。'},
+ {id:'m20',day:2,ph:'d2-train',e:'👋',t:'さよなら鬼怒川',pt:10,r:'N',type:'photo',
+  d:'帰りのスペーシアXで席に座ったら、窓の外に「またね」の1枚。',note:'🚫 ホームでは写真を撮らないでね。車内で座ってから撮ろう。',fl:'また来るね、鬼怒川。'},
+ {id:'m21',day:2,ph:'d2-train',e:'🥇',t:'旅のベスト3',pt:20,r:'R',type:'text',
+  d:'2日間の「楽しかったことベスト3」を書いてみよう。思い出カードにのるよ！',fl:'この旅のまとめ。'},
+];
+// 緊急指令（時間限定）
+const ORDERS=[
+ {id:'g1',at:'2026-11-14T12:00',e:'🎤',t:'大人3人に「この旅でいちばん楽しみなことは？」とインタビューしてみよう'},
+ {id:'g2',at:'2026-11-14T15:00',e:'🆕',t:'プールかアクティビティで、まだやっていないことに1つ挑戦してみよう'},
+ {id:'g3',at:'2026-11-14T19:00',e:'🍴',t:'ディナーで「食べたことのない料理」を1つ食べてみよう'},
+ {id:'g4',at:'2026-11-15T07:30',e:'🙋',t:'ホテルのスタッフさんに元気に「おはようございます」を3回言ってみよう'},
+ {id:'g5',at:'2026-11-15T10:30',e:'🌰',t:'散策中に「どんぐり・まつぼっくり・真っ赤な葉っぱ」のうち2つを見つけてみよう'},
+ {id:'g6',at:'2026-11-15T13:00',e:'😆',t:'ちびっこ3人を全員1回ずつ笑わせてみよう'},
+];
+ORDERS.forEach(o=>{o.s=new Date(o.at+':00+09:00').getTime();o.end=o.s+45*60e3;o.pt=15;});
+// クイズ
+const QUIZ=[
+ {q:'鬼怒川温泉があるのは何県？',a:['群馬県','栃木県','茨城県','福島県'],c:1,x:'栃木県日光市にある温泉地だよ。'},
+ {q:'栃木県の県庁所在地は？',a:['日光市','足利市','宇都宮市','小山市'],c:2,x:'宇都宮市。ぎょうざの街として有名！'},
+ {q:'スペーシアXを走らせている鉄道会社は？',a:['JR東日本','西武鉄道','東武鉄道','京成電鉄'],c:2,x:'東武鉄道の特急。2023年にデビューした新しい特急だよ。'},
+ {q:'日光東照宮にまつられている人物は？',a:['織田信長','豊臣秀吉','徳川家康','源頼朝'],c:2,x:'江戸幕府をひらいた徳川家康がまつられているよ。'},
+ {q:'日光東照宮の有名な「三猿」。いないのはどれ？',a:['見ざる','言わざる','聞かざる','食べざる'],c:3,x:'「見ざる・言わざる・聞かざる」の3匹。食べざるはいないよ！'},
+ {q:'日光東照宮にある、ねむっている動物の彫刻は？',a:['眠り猫','眠り犬','眠りうさぎ','眠りたぬき'],c:0,x:'「眠り猫」。左甚五郎の作と伝えられているよ。'},
+ {q:'「日光を見ずして〇〇と言うなかれ」。〇〇に入るのは？',a:['最高','結構','満足','絶景'],c:1,x:'「日光を見ないうちは『結構』と言うな」という言葉だよ。'},
+ {q:'日光にある、高さ約97mの有名な滝は？',a:['那智の滝','華厳の滝','袋田の滝','白糸の滝'],c:1,x:'華厳の滝。日本三名瀑の1つだよ。'},
+ {q:'紅葉で葉っぱが赤くなるのは、何という色素ができるから？',a:['クロロフィル','アントシアニン','カロテン','メラニン'],c:1,x:'アントシアニン。秋に葉の中でつくられて赤くなるよ。'},
+ {q:'鬼怒川は最後にどの川に合流する？',a:['荒川','多摩川','利根川','信濃川'],c:2,x:'利根川に合流して、太平洋へ流れていくよ。'},
+ {q:'栃木県で生まれた有名ないちごの品種は？',a:['あまおう','とちおとめ','紅ほっぺ','さがほのか'],c:1,x:'とちおとめ。栃木県はいちごの生産量が日本トップクラス！'},
+ {q:'北千住駅があるのは東京都の何区？',a:['荒川区','足立区','葛飾区','北区'],c:1,x:'足立区。いくつもの路線が集まる大きな駅だよ。'},
+];
+const SECRETS=[
+ {id:'s01',e:'⭐',t:'1日目コンプリート',r:'SR',pt:20,cond:'1日目のミッション（夜食をのぞく）を全部クリア',fl:'1日目をかけぬけた者のあかし。'},
+ {id:'s02',e:'🧠',t:'クイズ王',r:'SR',pt:20,cond:'クイズで全問正解',fl:'鬼怒川・日光の知識はカンペキ。'},
+ {id:'s03',e:'⚡',t:'指令の達人',r:'SR',pt:20,cond:'緊急指令を4つクリア',fl:'どんな指令もこなすエージェント。'},
+ {id:'s04',e:'👑',t:'鬼怒川レジェンド',r:'UR',pt:50,cond:'ミッションを全部クリア',fl:'鬼怒川のすべてを知る者。伝説のカード。'},
+];
+const AVATARS=['🦊','🐺','🦅','🐉','🐱','🐼','🦄','🐬'];
+const RANKS=[[0,'ルーキー'],[.12,'トラベラー'],[.3,'エクスプローラー'],[.55,'レジェンド候補'],[.8,'鬼怒川レジェンド']];
+const RSTAR={N:'★',R:'★★',SR:'★★★',UR:'★★★★'};
+const ALLCARDS=[...MISSIONS.map(m=>({...m,kind:'m'})),...SECRETS.map(s=>({...s,kind:'s'}))];
+ALLCARDS.forEach((c,i)=>c.no=String(i+1).padStart(2,'0'));
+
+/* ===================== 保存 ===================== */
+const LS='kinugawaQuest_v2';
+const blank=()=>({setup:null,done:{},orders:{},quizBest:0,quizPerfect:false,free:[],seen:{}});
+let S=blank();
+try{const r=localStorage.getItem(LS);if(r)S=Object.assign(blank(),JSON.parse(r));}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+const mem={};let dbp=null;
+function db(){if(dbp)return dbp;dbp=new Promise(res=>{try{const r=indexedDB.open('kinugawaQuestPhotos2',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null)}});return dbp;}
+async function putPhoto(k,b){mem[k]=b;const d=await db();if(!d)return;try{await new Promise((ok,ng)=>{const tx=d.transaction('p','readwrite');tx.objectStore('p').put(b,k);tx.oncomplete=ok;tx.onerror=ng;})}catch(e){}}
+async function getPhoto(k){if(mem[k])return mem[k];const d=await db();if(!d)return null;try{return await new Promise(ok=>{const q=d.transaction('p').objectStore('p').get(k);q.onsuccess=()=>{if(q.result)mem[k]=q.result;ok(q.result||null)};q.onerror=()=>ok(null);})}catch(e){return null}}
+async function clearPhotos(){for(const k in mem)delete mem[k];const d=await db();if(!d)return;try{d.transaction('p','readwrite').objectStore('p').clear()}catch(e){}}
+const urlCache={};
+async function photoURL(k){if(urlCache[k])return urlCache[k];const b=await getPhoto(k);if(!b)return null;return urlCache[k]=URL.createObjectURL(b);}
+function dropURL(k){if(urlCache[k]){URL.revokeObjectURL(urlCache[k]);delete urlCache[k];}}
+
+/* ===================== 共通 ===================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1800);}
+let AC=null;
+function chime(seq=[523,659,784,1047]){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();seq.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;const t=AC.currentTime+i*.1;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+.4);})}catch(e){}}
+function leaves(n=26,set=['🍁','🍂','✨']){for(let i=0;i<n;i++){const l=document.createElement('div');l.className='leaf';l.textContent=set[i%set.length];l.style.left=Math.random()*100+'vw';l.style.fontSize=(18+Math.random()*20)+'px';l.style.animationDuration=(2.2+Math.random()*2)+'s';l.style.animationDelay=(Math.random()*.6)+'s';document.body.appendChild(l);setTimeout(()=>l.remove(),5000);}}
+const JST=ts=>new Date(ts+9*3600e3);
+const fmtT=ts=>{const d=JST(ts);return `${d.getUTCMonth()+1}/${d.getUTCDate()} ${d.getUTCHours()}:${String(d.getUTCMinutes()).padStart(2,'0')}`;};
+
+/* ===================== 計算 ===================== */
+const isDone=m=>{const v=S.done[m.id];if(!v)return false;if(m.type==='counter')return (v.n||0)>=m.goal;if(m.type==='num')return (v.n||0)>0;return true;};
+const doneOrders=()=>ORDERS.filter(o=>S.orders[o.id]).length;
+function secretOK(id){
+ if(id==='s01')return MISSIONS.filter(m=>m.day===1&&m.id!=='m12').every(isDone);
+ if(id==='s02')return !!S.quizPerfect;
+ if(id==='s03')return doneOrders()>=4;
+ if(id==='s04')return MISSIONS.every(isDone);
+}
+const owned=c=>c.kind==='m'?isDone(c):secretOK(c.id);
+const MAXPT=MISSIONS.reduce((a,m)=>a+m.pt,0)+SECRETS.reduce((a,s)=>a+s.pt,0)+ORDERS.length*15+QUIZ.length*2;
+function points(){let p=0;MISSIONS.forEach(m=>{if(isDone(m))p+=m.pt});SECRETS.forEach(s=>{if(secretOK(s.id))p+=s.pt});return p+doneOrders()*15+(S.quizBest||0)*2;}
+function rank(p){const r=p/MAXPT;let n=RANKS[0][1];RANKS.forEach(([th,nm])=>{if(r>=th)n=nm});return n;}
+function titles(){
+ const ph=MISSIONS.filter(m=>m.type==='photo'&&isDone(m)).length;
+ return [
+  {e:'📷',t:'フォトグラファー',on:ph>=8,h:'写真ミッション8つ'},
+  {e:'🍽️',t:'グルメ審査員',on:isDone(MISSIONS[4])&&isDone(MISSIONS[10])&&isDone(MISSIONS[9]),h:'食べ物ミッション3つ'},
+  {e:'♨️',t:'温泉マスター',on:(S.done.m06?.n||0)>=10,h:'お風呂10種類'},
+  {e:'🏓',t:'ラリー王',on:(S.done.m07?.n||0)>=20,h:'ラリー20回'},
+  {e:'🧠',t:'クイズ王',on:!!S.quizPerfect,h:'クイズ全問正解'},
+  {e:'🌙',t:'夜ふかし隊',on:isDone(MISSIONS[11]),h:'夜食ミッション'},
+  {e:'⚡',t:'指令の達人',on:doneOrders()>=4,h:'緊急指令4つ'},
+  {e:'🍁',t:'もみじ博士',on:isDone(MISSIONS[14])&&isDone(MISSIONS[8]),h:'紅葉ミッション2つ'},
+ ];
+}
+function winOpen(m){if(!m.win)return true;const n=Date.now();return (n>=new Date(m.win[0]).getTime()&&n<=new Date(m.win[1]).getTime())||!!S.done[m.id];}
+const activeOrder=()=>{const n=Date.now();return ORDERS.find(o=>n>=o.s&&n<=o.end&&!S.orders[o.id]);};
+
+/* ===================== ヘッダー ===================== */
+function renderHeader(){
+ const p=points();
+ if(S.setup){$('#hAv').textContent=S.setup.av;$('#hName').textContent=S.setup.name;}
+ $('#hRank').textContent='ランク：'+rank(p)+'　称号 '+titles().filter(t=>t.on).length+'/8';
+ $('#hPt').textContent=p;$('#hBar').style.width=Math.min(100,p/MAXPT*100)+'%';
+}
+function alertHTML(){const o=activeOrder();if(!o)return '';const left=Math.max(0,Math.ceil((o.end-Date.now())/6e4));
+ return `<button class="alert" data-order="${o.id}"><b>⚡ 緊急指令 発令中！ のこり${left}分</b><span>${o.e} ${esc(o.t)}</span><small>タップしてクリア報告 → +15pt</small></button>`;}
+
+/* ===================== しおり ===================== */
+function renderPlan(){
+ const now=Date.now();let head='';
+ if(now>TRIP_END+3*3600e3){head=`<div class="box count"><div class="big dg">おかえり！</div><div class="s">🏆 アルバムで結果発表しよう</div></div>`;}
+ let cur=-1;SCHEDULE.forEach((s,i)=>{if(s.ts<=now)cur=i});if(now>TRIP_END+3*3600e3)cur=SCHEDULE.length;
+ let h=alertHTML()+head;
+ [1,2].forEach(day=>{h+=`<div class="dayttl dg">${day===1?'DAY1　11/14（土）':'DAY2　11/15（日）'}</div>`;
+  SCHEDULE.forEach((s,i)=>{if((day===1)!==(s.d==='2026-11-14'))return;
+   const ms=MISSIONS.filter(m=>m.ph===s.id),dn=ms.filter(isDone).length;
+   h+=`<div class="ti ${i<cur?'past':i===cur?'now':''}"><div class="tdot">${s.e}</div><div class="tbody">
+    <div class="ttime">${s.lb}${i===cur?'<span class="nowtag">いまここ</span>':''}</div><div class="tttl">${esc(s.t)}</div><div class="tsub">${esc(s.s)}</div>
+    ${ms.length?`<button class="tchip" data-goph="${s.id}">🎯 ミッション ${dn}/${ms.length}</button>`:''}</div></div>`;});});
+ h+=`<div class="box" style="font-size:12.5px;line-height:1.7;color:var(--muted)">🏨 日光きぬ川ホテル三日月<br>時間はめやす。大人の声かけを優先してね。</div>`;
+ $('#v-plan').innerHTML=h;
+}
+
+/* ===================== ミッション ===================== */
+let mTab=1;
+function renderMission(){
+ const dn=MISSIONS.filter(isDone).length;
+ let h=alertHTML()+`<h2 class="dg">ミッション <small>${dn}/${MISSIONS.length} クリア</small></h2>
+ <div class="seg"><button data-tab="1" class="${mTab===1?'on':''}">1日目</button><button data-tab="2" class="${mTab===2?'on':''}">2日目</button><button data-tab="3" class="${mTab===3?'on':''}">⚡緊急指令</button></div>`;
+ if(mTab===3){
+  h+=`<div class="rules">⚡ 旅行中、決まった時間に<b>緊急指令</b>が出るよ。出てから<b>45分以内</b>にクリアして報告すると +15pt。見のがすと消えちゃう！</div>`;
+  const n=Date.now();
+  ORDERS.forEach(o=>{const st=S.orders[o.id]?'done':(n<o.s?'soon':(n<=o.end?'act':'miss'));
+   const lb={done:'✅ クリア',soon:'🔒 まだ',act:'🔥 発令中',miss:'💨 終了'}[st];
+   h+=`<button class="gi ${st}" data-order="${o.id}"><div class="gt">${fmtT(o.s)}</div><div class="gb">${st==='soon'?'？？？（時間になると出るよ）':o.e+' '+esc(o.t)}</div><div class="gs">${lb}</div></button>`;});
+ }else{
+  h+=`<div class="rules">🚫 駅のホーム・温泉・プール・脱衣所では写真NG。知らない人が写らないようにね。</div>`;
+  let last='';
+  MISSIONS.filter(m=>m.day===mTab).forEach(m=>{
+   if(m.ph!==last){const s=SCHEDULE.find(x=>x.id===m.ph);h+=`<div class="mphase" id="ph-${m.ph}">${s.e} ${s.lb} ${esc(s.t)}</div>`;last=m.ph;}
+   const op=winOpen(m),d=isDone(m),v=S.done[m.id];
+   const sub=d?(m.type==='counter'?`✅ ${v.n}種類`:m.type==='num'?`✅ ベスト ${v.n}${m.unit}`:'✅ クリア！'):!op?'🔒 夜食の時間だけ':{photo:'📷 写真でクリア',text:'✏️ 書いてクリア',review:'⭐ 審査してクリア',counter:`♨️ ${v?.n||0}/${m.goal}種類`,num:'🔢 記録を入力'}[m.type];
+   h+=`<button class="mi ${d?'done':''} ${op?'':'lock'}" data-m="${m.id}"><div class="me" data-ph="${(m.type==='photo'||m.type==='review')&&v?m.id:''}">${op?m.e:'🔒'}</div>
+    <div class="mt"><b>${esc(m.t)}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
+ }
+ $('#v-mission').innerHTML=h;
+ document.querySelectorAll('#v-mission .me[data-ph]').forEach(async el=>{const k=el.dataset.ph;if(!k)return;const u=await photoURL(k);if(u){el.style.backgroundImage=`url(${u})`;el.textContent='';}});
+}
+
+let curM=null,tmp={};
+async function openMission(id){
+ const m=MISSIONS.find(x=>x.id===id);curM=m;const v=S.done[m.id];tmp={stars:v?.stars||0,n:v?.n||0};
+ let h=`<button class="x" data-close>✕</button>
+ <div class="mhead"><div class="me">${m.e}</div><div><b class="dg">${esc(m.t)}</b><span class="tag r${m.r}">${m.r}</span><span class="tag" style="background:var(--panel)">+${m.pt}pt</span></div></div>
+ <div class="mdesc">${esc(m.d)}</div>${m.hint?`<div class="hint">${esc(m.hint)}</div>`:''}${m.note?`<div class="note">${esc(m.note)}</div>`:''}`;
+ if(!winOpen(m)){h+=`<div class="note">🔒 11/14（土）21:30〜 夜食の時間だけ挑戦できるよ</div>`;}
+ else if(m.type==='photo'){h+=`<div id="pv"></div><button class="btn" data-shoot>${v?'📷 撮りなおす':'📷 写真を撮る・えらぶ'}</button>`;}
+ else if(m.type==='text'){h+=`<textarea id="txt" placeholder="ここに書こう">${esc(v?.text||'')}</textarea><button class="btn" data-savetxt>${v?'✏️ 書きなおす':'✅ これでクリア！'}</button>`;}
+ else if(m.type==='review'){h+=`<div id="pv"></div><button class="btn sub" data-shoot>${v?.photo?'📷 写真を撮りなおす':'📷 料理の写真（なくてもOK）'}</button>
+   <div class="field" style="margin-top:14px;text-align:center"><label>料理名</label><input class="inp" id="dish" value="${esc(v?.dish||'')}" placeholder="例：ローストビーフ" maxlength="20"></div>
+   <div class="stars">${[1,2,3,4,5].map(i=>`<button data-star="${i}" class="${i<=tmp.stars?'on':''}">⭐</button>`).join('')}</div>
+   <textarea id="txt" placeholder="ひとことレビュー（例：肉がやわらかすぎて口の中で消えた）">${esc(v?.text||'')}</textarea>
+   <button class="btn" data-savereview>✅ 審査結果を送る</button>`;}
+ else if(m.type==='counter'){h+=`<div class="counter"><button data-cnt="-1">−</button><b class="dg" id="cntv">${tmp.n}</b><button data-cnt="1">＋</button></div>
+   <div class="rsub" style="text-align:center">5種類でクリア ／ 10種類で♨️温泉マスター</div>`;}
+ else if(m.type==='num'){h+=`<div class="field"><label>ベスト記録（${m.unit}）</label><input class="inp" id="num" type="number" inputmode="numeric" value="${v?.n||''}" placeholder="0"></div><button class="btn" data-savenum>✅ 記録する</button>`;}
+ if(isDone(m))h+=`<button class="btn sub" data-card="${m.id}">🃏 カードを見る</button>`;
+ openSheet(h);
+ if((m.type==='photo'||m.type==='review')&&v){const u=await photoURL(m.id);if(u&&$('#pv'))$('#pv').innerHTML=`<img class="preview" src="${u}">`;}
+}
+async function downscale(file,max=1400){const url=URL.createObjectURL(file);try{const img=await new Promise((ok,ng)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ng;i.src=url;});let w=img.naturalWidth,h=img.naturalHeight;const r=Math.min(1,max/Math.max(w,h));w=Math.round(w*r);h=Math.round(h*r);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);return await new Promise(ok=>c.toBlob(b=>ok(b||file),'image/jpeg',.82));}catch(e){return file}finally{URL.revokeObjectURL(url);}}
+let fileTarget=null;
+$('#fileIn').addEventListener('change',async e=>{
+ const f=e.target.files[0];e.target.value='';if(!f||!fileTarget)return;toast('📷 保存中…');const blob=await downscale(f);
+ if(fileTarget==='free'){const k='free-'+Date.now();await putPhoto(k,blob);S.free.push({k,t:Date.now()});save();renderAlbum();toast('アルバムに追加したよ');return;}
+ const m=MISSIONS.find(x=>x.id===fileTarget);dropURL(m.id);await putPhoto(m.id,blob);
+ if(m.type==='review'){S.done[m.id]=S.done[m.id]||null;tmp.photo=true;const u=await photoURL(m.id);if($('#pv'))$('#pv').innerHTML=`<img class="preview" src="${u}">`;toast('写真OK！ 審査を書いてね');
+   if(S.done[m.id]){S.done[m.id].photo=true;save();}else delete S.done[m.id];return;}
+ const first=!isDone(m);S.done[m.id]={t:Date.now()};save();cleared(m,first);
+});
+function cleared(m,first){renderAll();if(first)reveal(m.id);else{closeSheet();toast('更新したよ');}}
+
+/* ===================== カード ===================== */
+function cardHTML(c,url,big){
+ if(!owned(c))return `<div class="tcard locked ${big?'big':''}"><div class="in"><div class="q">?</div><div class="qn">No.${c.no}</div></div></div>`;
+ const v=c.kind==='m'?S.done[c.id]:null;
+ let fl=c.fl;if(v?.text)fl='「'+v.text.slice(0,60)+(v.text.length>60?'…':'')+'」';
+ if(c.type==='review')fl=`${v.dish?v.dish+'　':''}${'⭐'.repeat(v.stars||0)}${v.text?'<br>「'+esc(v.text.slice(0,40))+'」':''}`;else fl=esc(fl);
+ if(c.type==='counter')fl=`入ったお風呂：${v.n}種類　`+fl;
+ if(c.type==='num')fl=`ベスト記録：${v.n}${c.unit}`;
+ return `<div class="tcard c-${c.r} ${big?'big':''}"><div class="in"><div class="tn"><span>${esc(c.t)}</span><em>${c.pt}</em></div>
+  <div class="ta" ${url?`style="background-image:url(${url})"`:''}>${url?'':c.e}</div>${big?`<div class="tflav">${fl}</div>`:''}
+  <div class="tf"><span>${RSTAR[c.r]}</span><span>No.${c.no}</span></div></div></div>`;
+}
+async function cardURL(c){return c.kind==='m'&&(c.type==='photo'||c.type==='review')&&S.done[c.id]?await photoURL(c.id):null;}
+let pending=[];
+async function reveal(id){
+ const c=ALLCARDS.find(x=>x.id===id);const u=await cardURL(c);
+ openSheet(`<div class="reveal"><div class="flip">${cardHTML(c,u,true)}</div></div>
+  <div class="rtitle dg">${c.r==='UR'?'🌈 伝説のカード！':c.r==='SR'?'✨ キラカード GET！':'🃏 カード GET！'}</div>
+  <div class="rsub">「${esc(c.t)}」 +${c.pt}pt</div><button class="btn" data-close>OK！</button>`,true);
+ chime(c.r==='N'?[523,659,784]:[523,659,784,1047,1319]);leaves(c.r==='N'?16:40,c.r==='N'?['🍁','🍂']:['🍁','✨','⭐','🍂']);
+ checkNew();
+}
+function checkNew(){S.seen=S.seen||{};SECRETS.forEach(s=>{if(secretOK(s.id)&&!S.seen[s.id]){S.seen[s.id]=1;pending.push({k:'card',id:s.id});}});
+ titles().forEach(t=>{if(t.on&&!S.seen['t:'+t.t]){S.seen['t:'+t.t]=1;pending.push({k:'title',t});}});save();}
+function renderZukan(){
+ const own=ALLCARDS.filter(owned).length;
+ $('#v-zukan').innerHTML=`<h2 class="dg">カードずかん</h2>
+ <div class="zstat"><div><b class="dg">${own}/${ALLCARDS.length}</b><span>カード</span></div><div><b class="dg">${ALLCARDS.filter(c=>owned(c)&&(c.r==='SR'||c.r==='UR')).length}</b><span>キラカード</span></div><div><b class="dg">${titles().filter(t=>t.on).length}/8</b><span>称号</span></div></div>
+ <div class="cgrid">${ALLCARDS.map(c=>`<button data-card="${c.id}" id="zc-${c.id}">${cardHTML(c,null)}</button>`).join('')}</div>
+ <div class="box" style="margin-top:12px"><b style="font-size:14px">🏅 称号</b><div class="titles" style="margin-top:8px">${titles().map(t=>`<span class="title ${t.on?'on':''}">${t.on?t.e+' '+t.t:'🔒 '+t.h}</span>`).join('')}</div></div>
+ <div class="box" style="font-size:12.5px;line-height:1.8"><b>🔍 シークレットカード</b><br>${SECRETS.map(s=>`${secretOK(s.id)?'✅':'❓'} ${esc(s.cond)}`).join('<br>')}</div>`;
+ ALLCARDS.forEach(async c=>{const u=await cardURL(c);if(u){const el=$('#zc-'+c.id+' .ta');if(el){el.style.backgroundImage=`url(${u})`;el.textContent='';}}});
+}
+async function showCard(id){const c=ALLCARDS.find(x=>x.id===id);
+ if(!owned(c)){toast(c.kind==='s'?'条件：'+c.cond:'「'+c.t+'」でGET');return;}
+ const u=await cardURL(c);const v=c.kind==='m'?S.done[c.id]:null;
+ openSheet(`<button class="x" data-close>✕</button><div style="margin-top:8px">${cardHTML(c,u,true)}</div><div class="rsub">${v?.t?'GETした日：'+fmtT(v.t):esc(c.cond||'')}</div>${c.kind==='m'?`<button class="btn sub" data-m="${c.id}">ミッションを開く</button>`:''}`,true);}
+
+/* ===================== 緊急指令 ===================== */
+let orderArm=null;
+function openOrder(id){const o=ORDERS.find(x=>x.id===id);const n=Date.now();
+ if(S.orders[o.id]){toast('✅ クリア済み');return;}
+ if(n<o.s){toast('🔒 '+fmtT(o.s)+' に発令されるよ');return;}
+ if(n>o.end){toast('💨 この指令は終わっちゃった');return;}
+ openSheet(`<button class="x" data-close>✕</button><div class="mhead"><div class="me">${o.e}</div><div><b class="dg">緊急指令</b><span class="tag rSR">+15pt</span></div></div>
+  <div class="mdesc" style="font-size:17px;font-weight:800">${esc(o.t)}</div><div class="rsub">のこり ${Math.ceil((o.end-n)/6e4)}分。正直に報告してね！</div>
+  <button class="btn red" data-orderok="${o.id}">⚡ クリアした！</button>`);}
+
+/* ===================== クイズ ===================== */
+let Q=null;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function renderQuiz(){
+ if(!Q){$('#v-quiz').innerHTML=`<h2 class="dg">鬼怒川・日光クイズ</h2>
+  <div class="box" style="text-align:center"><div style="font-size:54px">🧠</div><div style="font-size:15px;font-weight:800;margin:6px 0">全${QUIZ.length}問。全問正解で「クイズ王」カード！</div>
+  <div class="rsub">ベスト記録：<b style="color:var(--gold)">${S.quizBest}/${QUIZ.length}</b>（1問 2pt）<br>何回でも挑戦OK。電車の中で3人で勝負しよう！</div><button class="btn" data-qstart>スタート</button></div>`;return;}
+ const it=Q.list[Q.i];
+ $('#v-quiz').innerHTML=`<div class="qwrap"><div class="qprog">第${Q.i+1}問 / ${Q.list.length}　正解 ${Q.ok}</div><div class="qq">${esc(it.q)}</div>
+  ${it.order.map(ix=>`<button class="qopt ${Q.ans!=null?(ix===it.c?'ok':(ix===Q.ans?'ng':'')):''}" data-qa="${ix}">${esc(it.a[ix])}</button>`).join('')}
+  ${Q.ans!=null?`<div class="qexp">${Q.ans===it.c?'⭕ 正解！':'❌ ざんねん…'}　${esc(it.x)}</div><button class="btn" data-qnext>${Q.i+1<Q.list.length?'次の問題 →':'結果を見る'}</button>`:''}</div>`;
+}
+function quizEnd(){const sc=Q.ok,best=Math.max(S.quizBest,sc),pf=sc===QUIZ.length;const first=pf&&!S.quizPerfect;S.quizBest=best;if(pf)S.quizPerfect=true;save();Q=null;renderAll();
+ openSheet(`<div class="qbig dg">${sc}/${QUIZ.length}</div><div class="rtitle dg">${pf?'🎉 全問正解！':sc>=9?'おしい！':'また挑戦しよう'}</div><div class="rsub">ベスト記録 ${best}/${QUIZ.length}</div><button class="btn" data-close>OK</button>`,true);
+ chime(pf?[523,659,784,1047,1319]:[523,659]);if(pf)leaves(40);checkNew();}
+
+/* ===================== アルバム・結果発表 ===================== */
+async function albumItems(){const it=[];MISSIONS.forEach(m=>{if((m.type==='photo'||m.type==='review')&&S.done[m.id]&&(m.type==='photo'||S.done[m.id].photo))it.push({k:m.id,t:S.done[m.id].t,e:m.e,cap:m.t,r:m.r});});S.free.forEach(f=>it.push({k:f.k,t:f.t,e:'📷',cap:'フリー写真',r:'N'}));return it.sort((a,b)=>a.t-b.t);}
+async function renderAlbum(){const it=await albumItems();
+ let h=`<h2 class="dg">アルバム <small>${it.length}枚</small></h2>
+ <button class="btn red" data-result>🏆 結果発表モード</button><button class="btn" data-mem>🖼️ 思い出カードをつくる</button><button class="btn sub" data-free>📷 フリー写真を追加</button><div style="height:12px"></div>`;
+ h+=it.length?`<div class="agrid">${it.map(x=>`<button data-photo="${x.k}" id="al-${x.k}"><span>${x.e}</span></button>`).join('')}</div>`:`<div class="empty">まだ写真がないよ。<br>ミッションで撮った写真がここにたまるよ📸<br>写真はこのスマホの中だけに保存されるよ。</div>`;
+ $('#v-album').innerHTML=h;it.forEach(async x=>{const u=await photoURL(x.k);const el=document.getElementById('al-'+x.k);if(u&&el)el.style.backgroundImage=`url(${u})`;});}
+async function showPhoto(k){const u=await photoURL(k);const m=MISSIONS.find(x=>x.id===k),f=S.free.find(x=>x.k===k);
+ openSheet(`<button class="x" data-close>✕</button><div style="height:36px"></div><img class="preview" src="${u}"><div style="font-weight:800;font-size:16px">${m?m.e+' '+esc(m.t):'📷 フリー写真'}</div><div class="rsub">${fmtT(m?S.done[k].t:f.t)}　画像を長押しで「写真」に保存できるよ</div>${f?`<button class="btn sub" data-delfree="${k}">この写真を消す</button>`:''}`);}
+function showResult(){const p=points(),tt=titles().filter(t=>t.on);
+ openSheet(`<button class="x" data-close>✕</button><div class="res"><div class="rsub">🏆 結果発表 🏆</div><div class="av">${S.setup?.av||'🍁'}</div><div class="nm dg">${esc(S.setup?.name||'')}</div>
+  <div class="pt dg">${p}<span style="font-size:20px"> pt</span></div><div class="rk dg">${rank(p)}</div>
+  <div class="zstat" style="margin-top:16px"><div><b class="dg">${ALLCARDS.filter(owned).length}</b><span>カード</span></div><div><b class="dg">${ALLCARDS.filter(c=>owned(c)&&(c.r==='SR'||c.r==='UR')).length}</b><span>キラ</span></div><div><b class="dg">${doneOrders()}</b><span>緊急指令</span></div><div><b class="dg">${S.quizBest}</b><span>クイズ</span></div></div>
+  <div class="titles" style="justify-content:center">${tt.length?tt.map(t=>`<span class="title on">${t.e} ${t.t}</span>`).join(''):'<span class="rsub">称号はまだないよ</span>'}</div>
+  <div class="rsub" style="margin-top:14px">3人のスマホをならべて見せ合おう！</div></div>`,true);leaves(30,['🏆','✨','🍁']);chime([523,659,784,1047]);}
+function loadImg(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src;});}
+function cover(x,img,a,b,w,h){const r=Math.max(w/img.width,h/img.height),sw=w/r,sh=h/r;x.drawImage(img,(img.width-sw)/2,(img.height-sh)/2,sw,sh,a,b,w,h);}
+function wrap(x,text,a,b,maxW,lh,maxL){const L=[];let l='';for(const ch of text){if(ch==='\n'){L.push(l);l='';continue;}if(x.measureText(l+ch).width>maxW){L.push(l);l=ch;}else l+=ch;}L.push(l);L.slice(0,maxL).forEach((s,i)=>x.fillText(i===maxL-1&&L.length>maxL?s.slice(0,-1)+'…':s,a,b+i*lh));}
+async function makeMemory(){
+ openSheet(`<div class="empty">🖼️ 思い出カードをつくっているよ…</div>`,true);try{await document.fonts.ready}catch(e){}
+ const W=1080,H=1920,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ const FD="'Dela Gothic One',sans-serif",FB="'M PLUS Rounded 1c',sans-serif";
+ let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#131834');g.addColorStop(1,'#3a1f3d');x.fillStyle=g;x.fillRect(0,0,W,H);
+ x.globalAlpha=.12;x.font='260px serif';x.fillText('🍁',760,300);x.fillText('🍂',-60,1500);x.globalAlpha=1;
+ x.fillStyle='#ffc94a';x.font=`70px ${FD}`;x.fillText('鬼怒川もみじクエスト',60,140);
+ x.fillStyle='#9aa3c7';x.font=`800 36px ${FB}`;x.fillText('2026.11.14 – 11.15　日光きぬ川ホテル三日月',62,200);
+ x.fillStyle='#f4f1ea';x.font=`60px ${FD}`;x.fillText(`${S.setup?.av||''} ${S.setup?.name||''}`,60,300);
+ const p=points();x.fillStyle='#ffc94a';x.font=`60px ${FD}`;x.textAlign='right';x.fillText(p+'pt',1020,300);x.textAlign='left';
+ x.fillStyle='#ff8a3d';x.font=`800 34px ${FB}`;x.fillText('ランク：'+rank(p),62,355);
+ let it=await albumItems();const ord={UR:0,SR:1,R:2,N:3};it=it.slice().sort((a,b)=>ord[a.r]-ord[b.r]||a.t-b.t).slice(0,6).sort((a,b)=>a.t-b.t);
+ const pos=[[60,410],[555,430],[60,800],[555,820],[60,1190],[555,1210]],rot=[-2.5,2,1.8,-2,-1.5,2.5];
+ for(let i=0;i<6;i++){const[px,py]=pos[i];x.save();x.translate(px+232,py+190);x.rotate(rot[i]*Math.PI/180);x.translate(-232,-190);
+  x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=20;x.shadowOffsetY=6;x.fillStyle='#fdfaf3';x.fillRect(0,0,465,380);x.shadowColor='transparent';
+  if(it[i]){const b=await getPhoto(it[i].k),u=b?URL.createObjectURL(b):null,im=u?await loadImg(u):null;if(im)cover(x,im,16,16,433,290);if(u)URL.revokeObjectURL(u);
+   x.fillStyle='#2a2238';x.font=`800 30px ${FB}`;x.textAlign='center';x.fillText((it[i].e+' '+it[i].cap).slice(0,16),232,350);x.textAlign='left';}
+  else{x.fillStyle='#efe6d8';x.fillRect(16,16,433,290);x.font='110px serif';x.textAlign='center';x.fillText('🍁',232,210);x.textAlign='left';}
+  x.restore();}
+ const tt=titles().filter(t=>t.on).map(t=>t.e+t.t).join('　');
+ x.fillStyle='rgba(255,255,255,.08)';x.fillRect(50,1600,980,280);
+ x.fillStyle='#ffc94a';x.font=`800 32px ${FB}`;wrap(x,tt?'🏅 '+tt:'🏅 称号なし',80,1650,920,44,2);
+ x.fillStyle='#f4f1ea';x.font=`800 32px ${FB}`;const memo=S.done.m21?.text||S.done.m13?.text||'';if(memo)wrap(x,'「'+memo.replace(/\n/g,' ')+'」',80,1750,920,44,3);
+ const data=c.toDataURL('image/jpeg',.9);
+ openSheet(`<button class="x" data-close>✕</button><h2 class="dg" style="margin-top:2px">思い出カード</h2><img id="memImg" src="${data}"><div class="rsub" style="text-align:center;margin-top:10px">画像を<b>長押し</b> →「写真に保存」でカメラロールへ📱</div>`);}
+
+/* ===================== 設定 ===================== */
+let selAv=0,resetArm=false;
+function openSetup(first){const s=S.setup||{name:'',av:AVATARS[0]};selAv=Math.max(0,AVATARS.indexOf(s.av));
+ openSheet(`${first?'':'<button class="x" data-close>✕</button>'}<h2 class="dg" style="margin-top:2px">${first?'🍁 鬼怒川もみじクエスト':'⚙️ 設定'}</h2>
+ ${first?'<div class="mdesc">旅行中のミッション・緊急指令・クイズでポイントをかせいで、カードと称号をあつめよう。最後に3人で結果発表！</div>':''}
+ <div class="field"><label>アイコン</label><div class="avs">${AVATARS.map((a,i)=>`<button data-av="${i}" class="${i===selAv?'on':''}">${a}</button>`).join('')}</div></div>
+ <div class="field"><label>プレイヤー名</label><input class="inp" id="fN" value="${esc(s.name)}" placeholder="ニックネームでOK" maxlength="10"></div>
+ <button class="btn" data-savesetup>${first?'ゲームスタート！':'保存'}</button>
+ ${first?'':`<div style="height:24px"></div><button class="btn sub" data-reset>🗑️ データを全部消す</button><div class="rsub" style="text-align:center;margin-top:8px">ためしに使ったら、本番前にリセットしてね</div>`}`);}
+
+/* ===================== シート・画面 ===================== */
+function openSheet(html,center){$('#sheet').innerHTML=html;$('#ov').classList.toggle('center',!!center);$('#ov').classList.add('on');$('#sheet').scrollTop=0;}
+function closeSheet(){$('#ov').classList.remove('on');const n=pending.shift();if(!n)return;
+ setTimeout(()=>{if(n.k==='card')reveal(n.id);else{openSheet(`<div style="font-size:70px">${n.t.e}</div><div class="rtitle dg">称号GET！</div><div style="font-size:22px;font-weight:800;margin:6px 0">${n.t.t}</div><div class="rsub">${esc(n.t.h)}を達成</div><button class="btn" data-close>OK</button>`,true);chime([659,784,1047,1319]);leaves(24,['🏅','✨']);}},250);}
+let cur='plan';
+function go(v){cur=v;document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$('#main').scrollTop=0;renderView(v);try{history.replaceState(null,'','#'+v)}catch(e){}}
+function renderView(v){({plan:renderPlan,mission:renderMission,quiz:renderQuiz,zukan:renderZukan,album:renderAlbum})[v]();}
+function renderAll(){renderHeader();renderView(cur);}
+
+/* ===================== イベント ===================== */
+document.addEventListener('click',async e=>{
+ const t=e.target.closest('button');if(!t)return;const d=t.dataset;
+ if(d.v){go(d.v);return;}
+ if('close' in d){closeSheet();return;}
+ if(d.tab){mTab=+d.tab;renderMission();return;}
+ if(d.goph){const m=MISSIONS.find(x=>x.ph===d.goph);mTab=m.day;go('mission');setTimeout(()=>{const el=document.getElementById('ph-'+d.goph);if(el)el.scrollIntoView({block:'start'})},60);return;}
+ if(d.m){openMission(d.m);return;}
+ if('shoot' in d){fileTarget=curM.id;$('#fileIn').click();return;}
+ if('savetxt' in d){const v=$('#txt').value.trim();if(!v){toast('なにか書いてね');return;}const f=!isDone(curM);S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),text:v};save();checkNew();cleared(curM,f);return;}
+ if(d.star){tmp.stars=+d.star;document.querySelectorAll('[data-star]').forEach(b=>b.classList.toggle('on',+b.dataset.star<=tmp.stars));return;}
+ if('savereview' in d){const dish=$('#dish').value.trim(),tx=$('#txt').value.trim();if(!tmp.stars||!tx){toast('★とレビューを入れてね');return;}
+  const f=!isDone(curM),hasPhoto=!!(await getPhoto(curM.id));S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),stars:tmp.stars,dish,text:tx,photo:hasPhoto};save();checkNew();cleared(curM,f);return;}
+ if(d.cnt){const before=isDone(curM);tmp.n=Math.max(0,Math.min(30,tmp.n+ +d.cnt));$('#cntv').textContent=tmp.n;S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),n:tmp.n};if(!tmp.n)delete S.done[curM.id];save();checkNew();renderAll();
+  if(!before&&isDone(curM)){reveal(curM.id);}else if(pending.length&&isDone(curM)){closeSheet();}return;}
+ if('savenum' in d){const n=parseInt($('#num').value,10);if(!(n>0)){toast('記録を入れてね');return;}const f=!isDone(curM);S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),n};save();checkNew();cleared(curM,f);return;}
+ if(d.card){showCard(d.card);return;}
+ if(d.order){openOrder(d.order);return;}
+ if(d.orderok){S.orders[d.orderok]=Date.now();save();checkNew();renderAll();openSheet(`<div style="font-size:70px">⚡</div><div class="rtitle dg">指令クリア！</div><div class="rsub">+15pt</div><button class="btn" data-close>OK</button>`,true);chime();leaves(24,['⚡','✨']);return;}
+ if('qstart' in d){Q={i:0,ok:0,ans:null,list:shuffle(QUIZ).map(q=>({...q,order:shuffle([0,1,2,3])}))};renderQuiz();return;}
+ if(d.qa!==undefined&&Q&&Q.ans==null){Q.ans=+d.qa;if(Q.ans===Q.list[Q.i].c){Q.ok++;chime([784,1047]);}else chime([300,220]);renderQuiz();return;}
+ if('qnext' in d){Q.i++;Q.ans=null;if(Q.i>=Q.list.length)quizEnd();else{renderQuiz();$('#main').scrollTop=0;}return;}
+ if('result' in d){showResult();return;}
+ if('mem' in d){makeMemory();return;}
+ if('free' in d){fileTarget='free';$('#fileIn').click();return;}
+ if(d.photo){showPhoto(d.photo);return;}
+ if(d.delfree){S.free=S.free.filter(f=>f.k!==d.delfree);save();closeSheet();renderAlbum();toast('消したよ');return;}
+ if(d.av!==undefined){selAv=+d.av;document.querySelectorAll('[data-av]').forEach(b=>b.classList.toggle('on',b===t));return;}
+ if('savesetup' in d){const n=$('#fN').value.trim();if(!n){toast('名前を入れてね');return;}const first=!S.setup;S.setup={name:n,av:AVATARS[selAv]};save();closeSheet();renderAll();if(first){leaves(30);chime();toast('🍁 ゲームスタート！');}return;}
+ if('reset' in d){if(!resetArm){resetArm=true;t.textContent='⚠️ もう一度押すと全部消えます';setTimeout(()=>resetArm=false,4000);return;}
+  resetArm=false;S=blank();save();await clearPhotos();Object.keys(urlCache).forEach(dropURL);pending=[];Q=null;closeSheet();renderAll();openSetup(true);return;}
+ if(t.id==='gear'){openSetup(false);return;}
+});
+$('#ov').addEventListener('click',e=>{if(e.target.id==='ov'&&!$('#ov').classList.contains('center'))closeSheet();});
+
+/* ===================== 起動 ===================== */
+const h0=(location.hash||'').slice(1);if(['plan','mission','quiz','zukan','album'].includes(h0))cur=h0;
+go(cur);renderHeader();if(!S.setup)openSetup(true);
+let lastAct=activeOrder()?.id;
+setInterval(()=>{const a=activeOrder()?.id;if(a&&a!==lastAct){toast('⚡ 緊急指令が発令された！');chime([880,660,880,660]);}lastAct=a;
+ if(!$('#ov').classList.contains('on')&&(cur==='plan'||cur==='mission'))renderView(cur);},30000);
+</script>
+</body>
+</html>
