@@ -312,10 +312,14 @@ const MISSIONS=[
   d:'もし1000円もらえたら、おみやげコーナーで何を買う？ 品名・値段・理由を書いてみよう。（本当に買うかは親とそうだん）',fl:'限られた予算でベストをえらぶ力。'},
  {id:'m19',day:2,ph:'d2-lunch',e:'📸',t:'6人集合写真',pt:30,r:'SR',type:'photo',
   d:'ちびっこもふくめて、子ども6人全員の集合写真を撮ろう。ポーズは6年生で考えてみてね！',fl:'幼なじみ6人の、この秋だけの1枚。'},
+ {id:'f01',day:2,ph:'d2-lunch',e:'🎀',t:'妹・弟へのありがとう',pt:20,r:'R',type:'text',fam:1,
+  d:'いつもいっしょにいる妹や弟に「ありがとう」を書いてみよう。書けたら、本人に読んであげるか、ギュッとしてあげよう。妹・弟がいない人は、ちびっこたちの誰かにでもOK。',hint:'💡 小さい子には、むずかしい言葉より「いつもいっしょに遊んでくれてありがとう」みたいにシンプルな方が伝わるよ。',fl:'おにいちゃん・おねえちゃんからの、ありがとう。'},
  {id:'m20',day:2,ph:'d2-train',e:'👋',t:'さよなら鬼怒川',pt:10,r:'N',type:'photo',
   d:'帰りのスペーシアXで席に座ったら、窓の外に「またね」の1枚。',note:'🚫 ホームでは写真を撮らないでね。車内で座ってから撮ろう。',fl:'また来るね、鬼怒川。'},
  {id:'m21',day:2,ph:'d2-train',e:'🥇',t:'旅のベスト3',pt:20,r:'R',type:'text',
   d:'2日間の「楽しかったことベスト3」を書いてみよう。思い出カードにのるよ！',fl:'この旅のまとめ。'},
+ {id:'f02',day:2,ph:'d2-train',e:'💐',t:'親へのありがとう',pt:30,r:'SR',type:'text',fam:1,
+  d:'旅行に連れてきてくれたお父さん・お母さんに「ありがとう」を書いてみよう。旅行のことでも、ふだんのことでもOK。書けたら、スマホを見せるか、声に出して伝えてみてね。',hint:'💡 照れくさかったら、家に着いてからこっそり見せるのもアリだよ。',fl:'いちばん言いにくくて、いちばんうれしい言葉。'},
  {id:'o06',day:2,ph:'d2-train',e:'💌',t:'ふたりへのひとこと',pt:20,r:'R',type:'text',osn:1,
   d:'ほかの2人に、ふだんは照れくさくて言えない「ありがとう」や「これからもよろしく」を書いてみよう。このスマホの中だけに保存されるから、見せるかどうかは自分で決めてOK。',fl:'言葉にすると、ちょっと照れる。でも大事。'},
 ];
@@ -406,6 +410,7 @@ function titles(){
   {e:'🍁',t:'もみじ博士',on:D('m15')&&D('m09'),h:'紅葉ミッション2つ'},
   {e:'🏊',t:'スパ探検家',on:(S.done.h01?.n||0)>=5&&D('h02'),h:'流れるプール5周＋スライダー'},
   {e:'🫶',t:'幼馴染マスター',on:MISSIONS.filter(m=>m.osn).every(isDone),h:'幼馴染ミッション全部'},
+  {e:'💐',t:'ありがとう名人',on:MISSIONS.filter(m=>m.fam||m.id==='o06').every(isDone),h:'ありがとうミッション3つ'},
   {e:'🕵️',t:'ホテル探偵',on:D('h03')&&D('h04')&&D('h05'),h:'黄金風呂・神社・三日月マーク'},
  ];
 }
@@ -458,7 +463,7 @@ function renderMission(){
    const op=winOpen(m),d=isDone(m),v=S.done[m.id];
    const sub=d?(m.type==='counter'?`✅ ${v.n}種類`:m.type==='num'?`✅ ベスト ${v.n}${m.unit}`:'✅ クリア！'):!op?'🔒 夜食の時間だけ':{photo:'📷 写真でクリア',text:'✏️ 書いてクリア',review:'⭐ 審査してクリア',counter:`♨️ ${v?.n||0}/${m.goal}種類`,num:'🔢 記録を入力',check:'✅ できたら報告'}[m.type];
    h+=`<button class="mi ${d?'done':''} ${op?'':'lock'}" data-m="${m.id}"><div class="me" data-ph="${(m.type==='photo'||m.type==='review')&&v?m.id:''}">${op?m.e:'🔒'}</div>
-    <div class="mt"><b>${esc(m.t)}${m.osn?'<span class="tag" style="background:rgba(255,111,174,.2);color:var(--pink)">幼馴染</span>':''}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
+    <div class="mt"><b>${esc(m.t)}${m.osn?'<span class="tag" style="background:rgba(255,111,174,.2);color:var(--pink)">幼馴染</span>':''}${m.fam?'<span class="tag" style="background:rgba(255,201,74,.18);color:var(--gold)">家族</span>':''}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
  }
  $('#v-mission').innerHTML=h;
  document.querySelectorAll('#v-mission .me[data-ph]').forEach(async el=>{const k=el.dataset.ph;if(!k)return;const u=await photoURL(k);if(u){el.style.backgroundImage=`url(${u})`;el.textContent='';}});
