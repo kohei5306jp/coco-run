@@ -254,6 +254,10 @@ const MISSIONS=[
   d:'スペーシアXに乗って、自分の席に座ってから「出発進行！」ポーズで1枚。',note:'🚫 ホームでは写真を撮らないでね。車内でも通路に立たず、座ってから撮ろう。',fl:'冒険はここから始まった。'},
  {id:'m02',day:1,ph:'d1-train1',e:'🏔️',t:'車窓ハンター',pt:10,r:'N',type:'photo',
   d:'電車の窓から見えた「いちばんかっこいい景色」を撮ってみよう。山・川・鉄橋、なんでもOK。',hint:'💡 窓にスマホをくっつけると反射が消えてキレイに撮れるよ。',fl:'一瞬で通りすぎる景色をゲット。'},
+ {id:'o01',day:1,ph:'d1-train1',e:'🧸',t:'いちばん古い思い出',pt:20,r:'R',type:'text',osn:1,
+  d:'3人は2歳からの幼馴染。3人で覚えている「いちばん古い思い出」は何？ 電車の中で話し合って書いてみよう。覚えていることが3人でちがったら、それも書いておこう。',hint:'💡 親に聞くと、自分たちが覚えていない話も出てくるかも。',fl:'10年前の3人は、どんな顔してたかな。'},
+ {id:'o02',day:1,ph:'d1-train1',e:'🎯',t:'幼馴染クイズ',pt:20,r:'R',type:'num',unit:'問',osn:1,
+  d:'ほかの2人について「好きな食べ物」「苦手なもの」「今ハマってること」「将来の夢」を予想して、本人に答え合わせしてもらおう。8問中、何問当たったか記録してね。',hint:'💡 3人で順番に出し合うと盛り上がるよ。全問正解なら本物の幼馴染！',fl:'10年いっしょでも、知らないことがあるかも。'},
  {id:'m03',day:1,ph:'d1-kinugawa',e:'👹',t:'「鬼」の字ハンター',pt:20,r:'R',type:'photo',
   d:'鬼怒川エリアには「鬼」の字がいっぱい。駅前・看板・おみやげなどで「鬼」の字を見つけて撮ってみよう！',hint:'💡 いくつ見つけたか友だちと勝負しても面白いよ。',fl:'鬼怒川の「鬼」は、昔あばれ川だったことに由来するという説がある。'},
  {id:'m04',day:1,ph:'d1-hotel',e:'🦘',t:'全員空中ジャンプ',pt:30,r:'SR',type:'photo',
@@ -290,6 +294,8 @@ const MISSIONS=[
   d:'ナイトタイム夜食（21:30〜22:30）の時間だけ挑戦できる、限定ミッション！',fl:'夜にこっそり食べるごはんは特別な味。'},
  {id:'m13',day:1,ph:'d1-yashoku',e:'🏅',t:'1日目のMVP',pt:10,r:'N',type:'text',
   d:'今日いちばん面白かった人は？ その人と、何があったかを書いてみよう。',fl:'今日のMVPはこの人。'},
+ {id:'o05',day:1,ph:'d1-yashoku',e:'🔮',t:'10年後の3人を予言',pt:20,r:'R',type:'text',osn:1,
+  d:'10年後、3人は22歳。それぞれ何をしていると思う？ 自分とほかの2人の未来を予言して書いておこう。大人になったら答え合わせしてね。',fl:'この予言、当たるかな？'},
  {id:'m14',day:2,ph:'d2-breakfast',e:'🌅',t:'ねぐせチェック',pt:10,r:'N',type:'photo',
   d:'起きたらすぐ、今日のねぐせを記録しておこう。（見せたくない人は窓の外の朝の景色でもOK）',fl:'ねぐせも旅の思い出。'},
  {id:'m15',day:2,ph:'d2-checkout',e:'🍂',t:'紅葉グラデーション',pt:30,r:'SR',type:'photo',
@@ -298,6 +304,10 @@ const MISSIONS=[
   d:'鬼怒川の流れが見えるところで、川の写真を撮ってみよう。',note:'⚠️ 川や崖のふちには近づかないでね。大人のそばで撮ろう。',fl:'岩をけずってできた渓谷。'},
  {id:'m17',day:2,ph:'d2-checkout',e:'👤',t:'影アート',pt:20,r:'R',type:'photo',
   d:'日なたで、3人の影を組み合わせて「文字」か「形」をつくって撮ってみよう。何に見えるかは自由！',hint:'💡 くもりの日は、3人の手を重ねた写真でもOK。',fl:'太陽がつくったアート作品。'},
+ {id:'o03',day:2,ph:'d2-checkout',e:'📷',t:'あの日の再現写真',pt:30,r:'SR',type:'photo',osn:1,
+  d:'小さいころの3人の写真を親に見せてもらって、同じ場所の並び方・同じポーズで「いまの3人」を撮ってみよう。',hint:'💡 親のスマホに昔の写真が入っているはず。見つからなかったら「2歳のころの3人がやりそうなポーズ」でもOK。',fl:'2歳の3人と、12歳の3人。'},
+ {id:'o04',day:2,ph:'d2-checkout',e:'🤝',t:'3人だけの決めポーズ',pt:20,r:'R',type:'photo',osn:1,
+  d:'3人だけのオリジナル決めポーズを考えて撮ってみよう。名前もつけてね。（コメントは結果発表で見せ合おう）',fl:'この3人にしかできないポーズ。'},
  {id:'m18',day:2,ph:'d2-lunch',e:'💰',t:'おみやげ1000円作戦',pt:20,r:'R',type:'text',
   d:'もし1000円もらえたら、おみやげコーナーで何を買う？ 品名・値段・理由を書いてみよう。（本当に買うかは親とそうだん）',fl:'限られた予算でベストをえらぶ力。'},
  {id:'m19',day:2,ph:'d2-lunch',e:'📸',t:'6人集合写真',pt:30,r:'SR',type:'photo',
@@ -306,6 +316,8 @@ const MISSIONS=[
   d:'帰りのスペーシアXで席に座ったら、窓の外に「またね」の1枚。',note:'🚫 ホームでは写真を撮らないでね。車内で座ってから撮ろう。',fl:'また来るね、鬼怒川。'},
  {id:'m21',day:2,ph:'d2-train',e:'🥇',t:'旅のベスト3',pt:20,r:'R',type:'text',
   d:'2日間の「楽しかったことベスト3」を書いてみよう。思い出カードにのるよ！',fl:'この旅のまとめ。'},
+ {id:'o06',day:2,ph:'d2-train',e:'💌',t:'ふたりへのひとこと',pt:20,r:'R',type:'text',osn:1,
+  d:'ほかの2人に、ふだんは照れくさくて言えない「ありがとう」や「これからもよろしく」を書いてみよう。このスマホの中だけに保存されるから、見せるかどうかは自分で決めてOK。',fl:'言葉にすると、ちょっと照れる。でも大事。'},
 ];
 // 緊急指令（時間限定）
 const ORDERS=[
@@ -338,7 +350,6 @@ const SECRETS=[
  {id:'s03',e:'⚡',t:'指令の達人',r:'SR',pt:20,cond:'緊急指令を4つクリア',fl:'どんな指令もこなすエージェント。'},
  {id:'s04',e:'👑',t:'鬼怒川レジェンド',r:'UR',pt:50,cond:'ミッションを全部クリア',fl:'鬼怒川のすべてを知る者。伝説のカード。'},
 ];
-const AVATARS=['🦊','🐺','🦅','🐉','🐱','🐼','🦄','🐬'];
 const RANKS=[[0,'ルーキー'],[.12,'トラベラー'],[.3,'エクスプローラー'],[.55,'レジェンド候補'],[.8,'鬼怒川レジェンド']];
 const RSTAR={N:'★',R:'★★',SR:'★★★',UR:'★★★★'};
 const ALLCARDS=[...MISSIONS.map(m=>({...m,kind:'m'})),...SECRETS.map(s=>({...s,kind:'s'}))];
@@ -394,6 +405,7 @@ function titles(){
   {e:'⚡',t:'指令の達人',on:doneOrders()>=4,h:'緊急指令4つ'},
   {e:'🍁',t:'もみじ博士',on:D('m15')&&D('m09'),h:'紅葉ミッション2つ'},
   {e:'🏊',t:'スパ探検家',on:(S.done.h01?.n||0)>=5&&D('h02'),h:'流れるプール5周＋スライダー'},
+  {e:'🫶',t:'幼馴染マスター',on:MISSIONS.filter(m=>m.osn).every(isDone),h:'幼馴染ミッション全部'},
   {e:'🕵️',t:'ホテル探偵',on:D('h03')&&D('h04')&&D('h05'),h:'黄金風呂・神社・三日月マーク'},
  ];
 }
@@ -403,7 +415,7 @@ const activeOrder=()=>{const n=Date.now();return ORDERS.find(o=>n>=o.s&&n<=o.end
 /* ===================== ヘッダー ===================== */
 function renderHeader(){
  const p=points();
- if(S.setup){$('#hAv').textContent=S.setup.av;$('#hName').textContent=S.setup.name;}
+ if(S.setup){$('#hName').textContent=S.setup.name;}
  $('#hRank').textContent='ランク：'+rank(p)+'　称号 '+titles().filter(t=>t.on).length+'/'+titles().length;
  $('#hPt').textContent=p;$('#hBar').style.width=Math.min(100,p/MAXPT*100)+'%';
 }
@@ -446,7 +458,7 @@ function renderMission(){
    const op=winOpen(m),d=isDone(m),v=S.done[m.id];
    const sub=d?(m.type==='counter'?`✅ ${v.n}種類`:m.type==='num'?`✅ ベスト ${v.n}${m.unit}`:'✅ クリア！'):!op?'🔒 夜食の時間だけ':{photo:'📷 写真でクリア',text:'✏️ 書いてクリア',review:'⭐ 審査してクリア',counter:`♨️ ${v?.n||0}/${m.goal}種類`,num:'🔢 記録を入力',check:'✅ できたら報告'}[m.type];
    h+=`<button class="mi ${d?'done':''} ${op?'':'lock'}" data-m="${m.id}"><div class="me" data-ph="${(m.type==='photo'||m.type==='review')&&v?m.id:''}">${op?m.e:'🔒'}</div>
-    <div class="mt"><b>${esc(m.t)}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
+    <div class="mt"><b>${esc(m.t)}${m.osn?'<span class="tag" style="background:rgba(255,111,174,.2);color:var(--pink)">幼馴染</span>':''}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
  }
  $('#v-mission').innerHTML=h;
  document.querySelectorAll('#v-mission .me[data-ph]').forEach(async el=>{const k=el.dataset.ph;if(!k)return;const u=await photoURL(k);if(u){el.style.backgroundImage=`url(${u})`;el.textContent='';}});
@@ -560,7 +572,7 @@ async function renderAlbum(){const it=await albumItems();
 async function showPhoto(k){const u=await photoURL(k);const m=MISSIONS.find(x=>x.id===k),f=S.free.find(x=>x.k===k);
  openSheet(`<button class="x" data-close>✕</button><div style="height:36px"></div><img class="preview" src="${u}"><div style="font-weight:800;font-size:16px">${m?m.e+' '+esc(m.t):'📷 フリー写真'}</div><div class="rsub">${fmtT(m?S.done[k].t:f.t)}　画像を長押しで「写真」に保存できるよ</div>${f?`<button class="btn sub" data-delfree="${k}">この写真を消す</button>`:''}`);}
 function showResult(){const p=points(),tt=titles().filter(t=>t.on);
- openSheet(`<button class="x" data-close>✕</button><div class="res"><div class="rsub">🏆 結果発表 🏆</div><div class="av">${S.setup?.av||'🍁'}</div><div class="nm dg">${esc(S.setup?.name||'')}</div>
+ openSheet(`<button class="x" data-close>✕</button><div class="res"><div class="rsub">🏆 結果発表 🏆</div><div class="av">🍁</div><div class="nm dg">${esc(S.setup?.name||'')}</div>
   <div class="pt dg">${p}<span style="font-size:20px"> pt</span></div><div class="rk dg">${rank(p)}</div>
   <div class="zstat" style="margin-top:16px"><div><b class="dg">${ALLCARDS.filter(owned).length}</b><span>カード</span></div><div><b class="dg">${ALLCARDS.filter(c=>owned(c)&&(c.r==='SR'||c.r==='UR')).length}</b><span>キラ</span></div><div><b class="dg">${doneOrders()}</b><span>緊急指令</span></div><div><b class="dg">${S.quizBest}</b><span>クイズ</span></div></div>
   <div class="titles" style="justify-content:center">${tt.length?tt.map(t=>`<span class="title on">${t.e} ${t.t}</span>`).join(''):'<span class="rsub">称号はまだないよ</span>'}</div>
@@ -576,7 +588,7 @@ async function makeMemory(){
  x.globalAlpha=.12;x.font='260px serif';x.fillText('🍁',760,300);x.fillText('🍂',-60,1500);x.globalAlpha=1;
  x.fillStyle='#ffc94a';x.font=`70px ${FD}`;x.fillText('鬼怒川もみじクエスト',60,140);
  x.fillStyle='#9aa3c7';x.font=`800 36px ${FB}`;x.fillText('2026.11.14 – 11.15　日光きぬ川ホテル三日月',62,200);
- x.fillStyle='#f4f1ea';x.font=`60px ${FD}`;x.fillText(`${S.setup?.av||''} ${S.setup?.name||''}`,60,300);
+ x.fillStyle='#f4f1ea';x.font=`60px ${FD}`;x.fillText(`${S.setup?.name||''}`,60,300);
  const p=points();x.fillStyle='#ffc94a';x.font=`60px ${FD}`;x.textAlign='right';x.fillText(p+'pt',1020,300);x.textAlign='left';
  x.fillStyle='#ff8a3d';x.font=`800 34px ${FB}`;x.fillText('ランク：'+rank(p),62,355);
  let it=await albumItems();const ord={UR:0,SR:1,R:2,N:3};it=it.slice().sort((a,b)=>ord[a.r]-ord[b.r]||a.t-b.t).slice(0,6).sort((a,b)=>a.t-b.t);
@@ -595,11 +607,10 @@ async function makeMemory(){
  openSheet(`<button class="x" data-close>✕</button><h2 class="dg" style="margin-top:2px">思い出カード</h2><img id="memImg" src="${data}"><div class="rsub" style="text-align:center;margin-top:10px">画像を<b>長押し</b> →「写真に保存」でカメラロールへ📱</div>`);}
 
 /* ===================== 設定 ===================== */
-let selAv=0,resetArm=false;
-function openSetup(first){const s=S.setup||{name:'',av:AVATARS[0]};selAv=Math.max(0,AVATARS.indexOf(s.av));
+let resetArm=false;
+function openSetup(first){const s=S.setup||{name:''};
  openSheet(`${first?'':'<button class="x" data-close>✕</button>'}<h2 class="dg" style="margin-top:2px">${first?'🍁 鬼怒川もみじクエスト':'⚙️ 設定'}</h2>
  ${first?'<div class="mdesc">旅行中のミッション・緊急指令・クイズでポイントをかせいで、カードと称号をあつめよう。最後に3人で結果発表！</div>':''}
- <div class="field"><label>アイコン</label><div class="avs">${AVATARS.map((a,i)=>`<button data-av="${i}" class="${i===selAv?'on':''}">${a}</button>`).join('')}</div></div>
  <div class="field"><label>プレイヤー名</label><input class="inp" id="fN" value="${esc(s.name)}" placeholder="ニックネームでOK" maxlength="10"></div>
  <button class="btn" data-savesetup>${first?'ゲームスタート！':'保存'}</button>
  ${first?'':`<div style="height:24px"></div><button class="btn sub" data-reset>🗑️ データを全部消す</button><div class="rsub" style="text-align:center;margin-top:8px">ためしに使ったら、本番前にリセットしてね</div>`}`);}
@@ -641,8 +652,7 @@ document.addEventListener('click',async e=>{
  if('free' in d){fileTarget='free';$('#fileIn').click();return;}
  if(d.photo){showPhoto(d.photo);return;}
  if(d.delfree){S.free=S.free.filter(f=>f.k!==d.delfree);save();closeSheet();renderAlbum();toast('消したよ');return;}
- if(d.av!==undefined){selAv=+d.av;document.querySelectorAll('[data-av]').forEach(b=>b.classList.toggle('on',b===t));return;}
- if('savesetup' in d){const n=$('#fN').value.trim();if(!n){toast('名前を入れてね');return;}const first=!S.setup;S.setup={name:n,av:AVATARS[selAv]};save();closeSheet();renderAll();if(first){leaves(30);chime();toast('🍁 ゲームスタート！');}return;}
+ if('savesetup' in d){const n=$('#fN').value.trim();if(!n){toast('名前を入れてね');return;}const first=!S.setup;S.setup={name:n};save();closeSheet();renderAll();if(first){leaves(30);chime();toast('🍁 ゲームスタート！');}return;}
  if('reset' in d){if(!resetArm){resetArm=true;t.textContent='⚠️ もう一度押すと全部消えます';setTimeout(()=>resetArm=false,4000);return;}
   resetArm=false;S=blank();save();await clearPhotos();Object.keys(urlCache).forEach(dropURL);pending=[];Q=null;closeSheet();renderAll();openSetup(true);return;}
  if(t.id==='gear'){openSetup(false);return;}
