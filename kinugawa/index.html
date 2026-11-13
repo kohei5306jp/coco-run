@@ -77,6 +77,12 @@ nav button.on i{filter:none;opacity:1}
 .seg{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin-bottom:12px;border:1px solid var(--line)}
 .seg button{flex:1;background:none;padding:9px 4px;border-radius:10px;font-weight:800;font-size:13.5px;color:var(--muted)}
 .seg button.on{background:var(--panel);color:var(--gold)}
+.seg5 button{font-size:11.5px;padding:9px 2px}
+.hidtxt{display:block;width:100%;text-align:left;font-size:17px;font-weight:800;line-height:1.6;margin-top:6px;padding:10px;border-radius:10px;background:var(--bg2);transition:filter .2s}
+.hidtxt.blur{filter:blur(7px);user-select:none;-webkit-user-select:none}
+.rank3{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px;text-align:left}
+.rank3 .md{font-size:30px}.rank3 .nm{flex:1;font-weight:800;font-size:16px}.rank3 .pp{font-size:22px;color:var(--gold)}
+.rank3 input{flex:1;min-width:0;padding:9px;margin:0}.rank3 input.pt{flex:0 0 90px}
 .rules{font-size:12.5px;line-height:1.7;background:rgba(255,201,74,.1);border:1px solid rgba(255,201,74,.3);border-radius:12px;padding:10px 12px;margin-bottom:12px}
 .mphase{font-size:12.5px;font-weight:800;color:var(--muted);margin:16px 4px 6px}
 .mi{display:flex;align-items:center;gap:11px;background:var(--panel);border-radius:14px;padding:10px 12px;margin-bottom:8px;width:100%;text-align:left;border:1px solid var(--line)}
@@ -348,6 +354,32 @@ const QUIZ=[
  {q:'栃木県で生まれた有名ないちごの品種は？',a:['あまおう','とちおとめ','紅ほっぺ','さがほのか'],c:1,x:'とちおとめ。栃木県はいちごの生産量が日本トップクラス！'},
  {q:'北千住駅があるのは東京都の何区？',a:['荒川区','足立区','葛飾区','北区'],c:1,x:'足立区。いくつもの路線が集まる大きな駅だよ。'},
 ];
+const REC=['m01','o02','m04','m08','h03','h07','o05','o03','m19','f02'];
+MISSIONS.forEach(m=>{if(REC.includes(m.id))m.rec=1;});
+const HIDDEN=[
+ '今日中に、だれかに「マジで？」と3回言わせよう',
+ 'だれにも気づかれずに、大人とハイタッチしよう',
+ 'ごはんの時、だれかに自分と同じ料理を取らせよう（すすめるのはOK）',
+ '集合写真で、3回とも同じ変なポーズでこっそり写りこもう',
+ 'だれかに「ありがとう」を5回言ってもらおう',
+ '会話の中に「もみじ」という言葉を自然に5回入れよう',
+ 'ちびっこのだれかと、こっそりおそろいのポーズで写真に写ろう',
+ 'だれかに自分の好きな曲を口ずさませよう',
+ '友だちに「鬼怒川」と言わせよう（自分からは言わないこと）',
+ 'だれにも頼まれずに、みんなのスリッパやくつをそろえよう',
+ '大人に「小6のころ何して遊んでた？」と聞き出そう（指令だとバレずに）',
+ 'だれかに自分のことを「天才」と言わせよう',
+];
+const PARENT=[
+ {id:'p01',e:'🍽️',t:'ビュッフェで「いちばん変な組み合わせ」を食べてもらおう'},
+ {id:'p02',e:'🏓',t:'親と卓球でガチ勝負！ 負けた方は変顔写真'},
+ {id:'p03',e:'🎢',t:'親にウォータースライダーを1回すべってもらおう'},
+ {id:'p04',e:'🦘',t:'親もいっしょに「全員ジャンプ写真」に入ってもらおう'},
+ {id:'p05',e:'🧒',t:'親が小6のころ、どんな遊びをしていたか聞いてみよう'},
+ {id:'p06',e:'👶',t:'2歳のころの3人のエピソードを1つ話してもらおう'},
+ {id:'p07',e:'✨',t:'自分の名前の由来を教えてもらおう'},
+ {id:'p08',e:'🥇',t:'帰りの電車で、親に「旅のベスト3」を発表してもらおう'},
+];
 const SECRETS=[
  {id:'s01',e:'⭐',t:'1日目コンプリート',r:'SR',pt:20,cond:'1日目のミッション（夜食をのぞく）を全部クリア',fl:'1日目をかけぬけた者のあかし。'},
  {id:'s02',e:'🧠',t:'クイズ王',r:'SR',pt:20,cond:'クイズで全問正解',fl:'鬼怒川・日光の知識はカンペキ。'},
@@ -361,10 +393,11 @@ ALLCARDS.forEach((c,i)=>c.no=String(i+1).padStart(2,'0'));
 
 /* ===================== 保存 ===================== */
 const LS='kinugawaQuest_v2';
-const blank=()=>({setup:null,done:{},orders:{},quizBest:0,quizPerfect:false,free:[],seen:{}});
+const blank=()=>({setup:null,done:{},orders:{},quizBest:0,quizPerfect:false,free:[],seen:{},hid:null,hidDone:{},parent:{},board:{}});
 let S=blank();
 try{const r=localStorage.getItem(LS);if(r)S=Object.assign(blank(),JSON.parse(r));}catch(e){}
 function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function ensureHid(){S.hidDone=S.hidDone||{};S.parent=S.parent||{};S.board=S.board||{};if(!S.hid||S.hid.length!==2){const a=Math.floor(Math.random()*HIDDEN.length);let b;do{b=Math.floor(Math.random()*HIDDEN.length)}while(b===a);S.hid=[a,b];save();}}
 const mem={};let dbp=null;
 function db(){if(dbp)return dbp;dbp=new Promise(res=>{try{const r=indexedDB.open('kinugawaQuestPhotos2',1);r.onupgradeneeded=()=>r.result.createObjectStore('p');r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);}catch(e){res(null)}});return dbp;}
 async function putPhoto(k,b){mem[k]=b;const d=await db();if(!d)return;try{await new Promise((ok,ng)=>{const tx=d.transaction('p','readwrite');tx.objectStore('p').put(b,k);tx.oncomplete=ok;tx.onerror=ng;})}catch(e){}}
@@ -394,8 +427,8 @@ function secretOK(id){
  if(id==='s04')return MISSIONS.every(isDone);
 }
 const owned=c=>c.kind==='m'?isDone(c):secretOK(c.id);
-const MAXPT=MISSIONS.reduce((a,m)=>a+m.pt,0)+SECRETS.reduce((a,s)=>a+s.pt,0)+ORDERS.length*15+QUIZ.length*2;
-function points(){let p=0;MISSIONS.forEach(m=>{if(isDone(m))p+=m.pt});SECRETS.forEach(s=>{if(secretOK(s.id))p+=s.pt});return p+doneOrders()*15+(S.quizBest||0)*2;}
+const MAXPT=MISSIONS.reduce((a,m)=>a+m.pt,0)+SECRETS.reduce((a,s)=>a+s.pt,0)+ORDERS.length*15+QUIZ.length*2+2*25+PARENT.length*10;
+function points(){let p=0;MISSIONS.forEach(m=>{if(isDone(m))p+=m.pt*(S.done[m.id].lucky?2:1)});p+=Object.keys(S.hidDone||{}).filter(k=>S.hidDone[k]).length*25+Object.keys(S.parent||{}).length*10;SECRETS.forEach(s=>{if(secretOK(s.id))p+=s.pt});return p+doneOrders()*15+(S.quizBest||0)*2;}
 function rank(p){const r=p/MAXPT;let n=RANKS[0][1];RANKS.forEach(([th,nm])=>{if(r>=th)n=nm});return n;}
 function titles(){
  const ph=MISSIONS.filter(m=>m.type==='photo'&&isDone(m)).length;const D=id=>isDone(MISSIONS.find(m=>m.id===id));
@@ -448,28 +481,41 @@ let mTab=1;
 function renderMission(){
  const dn=MISSIONS.filter(isDone).length;
  let h=alertHTML()+`<h2 class="dg">ミッション <small>${dn}/${MISSIONS.length} クリア</small></h2>
- <div class="seg"><button data-tab="1" class="${mTab===1?'on':''}">1日目</button><button data-tab="2" class="${mTab===2?'on':''}">2日目</button><button data-tab="3" class="${mTab===3?'on':''}">⚡緊急指令</button></div>`;
- if(mTab===3){
+ <div class="seg seg5">${[[1,'1日目'],[2,'2日目'],[3,'⚡指令'],[4,'🤫ナイショ'],[5,'👪親']].map(([k,l])=>`<button data-tab="${k}" class="${mTab===k?'on':''}">${l}</button>`).join('')}</div>`;
+ if(mTab===4){
+  h+=`<div class="rules">🤫 <b>ナイショ指令</b>は、このスマホだけの秘密の指令。<b>指令だとバレずに</b>やりとげたら成功（+25pt）。結果発表でみんなにバラそう！<br>※友だちに画面を見られないように注意！</div>`;
+  S.hid.forEach((ix,i)=>{const dn=!!S.hidDone[ix];
+   h+=`<div class="box hidbox"><div style="font-size:12px;color:var(--muted);font-weight:800">ナイショ指令 ${i+1}</div>
+    <button class="hidtxt ${showHid[i]?'':'blur'}" data-hidshow="${i}">${esc(HIDDEN[ix])}</button>
+    <div class="rsub" style="margin:4px 0 10px">${showHid[i]?'タップでかくす':'タップで見る（まわりに注意！）'}</div>
+    <button class="btn ${dn?'sub':'red'}" data-hid="${ix}">${dn?'✅ 成功！（タップで取り消し）':'🤫 成功した！ +25pt'}</button></div>`;});
+ }else if(mTab===5){
+  h+=`<div class="rules">👪 <b>親チャレンジ</b>は、きみたちから親へのミッション。親にお願いして、やってもらえたら +10pt！</div>`;
+  PARENT.forEach(o=>{const dn=!!S.parent[o.id];
+   h+=`<button class="gi ${dn?'done':''}" data-par="${o.id}"><div class="gt" style="width:auto;font-size:24px">${o.e}</div><div class="gb">${esc(o.t)}</div><div class="gs">${dn?'✅':'+10'}</div></button>`;});
+ }else if(mTab===3){
   h+=`<div class="rules">⚡ 旅行中、決まった時間に<b>緊急指令</b>が出るよ。出てから<b>45分以内</b>にクリアして報告すると +15pt。見のがすと消えちゃう！</div>`;
   const n=Date.now();
   ORDERS.forEach(o=>{const st=S.orders[o.id]?'done':(n<o.s?'soon':(n<=o.end?'act':'miss'));
    const lb={done:'✅ クリア',soon:'🔒 まだ',act:'🔥 発令中',miss:'💨 終了'}[st];
    h+=`<button class="gi ${st}" data-order="${o.id}"><div class="gt">${fmtT(o.s)}</div><div class="gb">${st==='soon'?'？？？（時間になると出るよ）':o.e+' '+esc(o.t)}</div><div class="gs">${lb}</div></button>`;});
  }else{
-  h+=`<div class="rules">🚫 駅のホーム・温泉・プール・脱衣所では写真NG。知らない人が写らないようにね。</div>`;
+  const rc=MISSIONS.filter(m=>m.rec&&isDone(m)).length;
+  h+=`<div class="rules">⭐ は<b>おすすめミッション</b>（2日間で10こ）。<b>全部やらなくてOK！</b> ほかはやれたらボーナスだよ。<br>🎰 クリアすると、たまに<b>ポイント2倍</b>が出るかも！<br>🚫 駅のホーム・温泉・プール・脱衣所では写真NG。</div>
+  <button class="btn sub" data-reconly style="margin-bottom:6px;padding:10px;font-size:14px">${recOnly?'すべてのミッションを表示':'⭐ おすすめだけ表示'}　<span style="color:var(--gold)">おすすめ ${rc}/10</span></button>`;
   let last='';
-  MISSIONS.filter(m=>m.day===mTab).forEach(m=>{
+  MISSIONS.filter(m=>m.day===mTab&&(!recOnly||m.rec)).forEach(m=>{
    if(m.ph!==last){const s=SCHEDULE.find(x=>x.id===m.ph);h+=`<div class="mphase" id="ph-${m.ph}">${s.e} ${s.lb} ${esc(s.t)}</div>`;last=m.ph;}
    const op=winOpen(m),d=isDone(m),v=S.done[m.id];
    const sub=d?(m.type==='counter'?`✅ ${v.n}種類`:m.type==='num'?`✅ ベスト ${v.n}${m.unit}`:'✅ クリア！'):!op?'🔒 夜食の時間だけ':{photo:'📷 写真でクリア',text:'✏️ 書いてクリア',review:'⭐ 審査してクリア',counter:`♨️ ${v?.n||0}/${m.goal}種類`,num:'🔢 記録を入力',check:'✅ できたら報告'}[m.type];
    h+=`<button class="mi ${d?'done':''} ${op?'':'lock'}" data-m="${m.id}"><div class="me" data-ph="${(m.type==='photo'||m.type==='review')&&v?m.id:''}">${op?m.e:'🔒'}</div>
-    <div class="mt"><b>${esc(m.t)}${m.osn?'<span class="tag" style="background:rgba(255,111,174,.2);color:var(--pink)">幼馴染</span>':''}${m.fam?'<span class="tag" style="background:rgba(255,201,74,.18);color:var(--gold)">家族</span>':''}</b><span>${sub}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
+    <div class="mt"><b>${m.rec?'⭐ ':''}${esc(m.t)}${m.osn?'<span class="tag" style="background:rgba(255,111,174,.2);color:var(--pink)">幼馴染</span>':''}${m.fam?'<span class="tag" style="background:rgba(255,201,74,.18);color:var(--gold)">家族</span>':''}</b><span>${sub}${d&&v.lucky?' 🎰×2':''}</span></div><div class="mp r${m.r}">${d?'✓':'+'+m.pt}</div></button>`;});
  }
  $('#v-mission').innerHTML=h;
  document.querySelectorAll('#v-mission .me[data-ph]').forEach(async el=>{const k=el.dataset.ph;if(!k)return;const u=await photoURL(k);if(u){el.style.backgroundImage=`url(${u})`;el.textContent='';}});
 }
 
-let curM=null,tmp={};
+let curM=null,tmp={},recOnly=false,showHid=[false,false];
 async function openMission(id){
  const m=MISSIONS.find(x=>x.id===id);curM=m;const v=S.done[m.id];tmp={stars:v?.stars||0,n:v?.n||0};
  let h=`<button class="x" data-close>✕</button>
@@ -499,9 +545,11 @@ $('#fileIn').addEventListener('change',async e=>{
  const m=MISSIONS.find(x=>x.id===fileTarget);dropURL(m.id);await putPhoto(m.id,blob);
  if(m.type==='review'){S.done[m.id]=S.done[m.id]||null;tmp.photo=true;const u=await photoURL(m.id);if($('#pv'))$('#pv').innerHTML=`<img class="preview" src="${u}">`;toast('写真OK！ 審査を書いてね');
    if(S.done[m.id]){S.done[m.id].photo=true;save();}else delete S.done[m.id];return;}
- const first=!isDone(m);S.done[m.id]={t:Date.now()};save();cleared(m,first);
+ const first=!isDone(m),old=S.done[m.id];S.done[m.id]={t:old?.t||Date.now()};keepLuck(m,old);save();cleared(m,first);
 });
-function cleared(m,first){renderAll();if(first)reveal(m.id);else{closeSheet();toast('更新したよ');}}
+function luck(m){if(S.done[m.id]&&S.done[m.id].lucky===undefined){S.done[m.id].lucky=Math.random()<0.2;save();}}
+function keepLuck(m,old){if(old&&old.lucky!==undefined&&S.done[m.id])S.done[m.id].lucky=old.lucky;}
+function cleared(m,first){if(first)luck(m);renderAll();if(first)reveal(m.id);else{closeSheet();toast('更新したよ');}}
 
 /* ===================== カード ===================== */
 function cardHTML(c,url,big){
@@ -521,8 +569,8 @@ async function reveal(id){
  const c=ALLCARDS.find(x=>x.id===id);const u=await cardURL(c);
  openSheet(`<div class="reveal"><div class="flip">${cardHTML(c,u,true)}</div></div>
   <div class="rtitle dg">${c.r==='UR'?'🌈 伝説のカード！':c.r==='SR'?'✨ キラカード GET！':'🃏 カード GET！'}</div>
-  <div class="rsub">「${esc(c.t)}」 +${c.pt}pt</div><button class="btn" data-close>OK！</button>`,true);
- chime(c.r==='N'?[523,659,784]:[523,659,784,1047,1319]);leaves(c.r==='N'?16:40,c.r==='N'?['🍁','🍂']:['🍁','✨','⭐','🍂']);
+  ${c.kind==='m'&&S.done[c.id]?.lucky?`<div class="rtitle dg" style="color:var(--pink);font-size:26px">🎰 LUCKY！ ポイント2倍</div><div class="rsub">「${esc(c.t)}」 +${c.pt*2}pt</div>`:`<div class="rsub">「${esc(c.t)}」 +${c.pt}pt</div>`}<button class="btn" data-close>OK！</button>`,true);
+ const lk=c.kind==='m'&&S.done[c.id]?.lucky;chime(lk?[523,659,784,1047,1319,1568,2093]:c.r==='N'?[523,659,784]:[523,659,784,1047,1319]);leaves(lk?50:c.r==='N'?16:40,lk?['🎰','💰','✨','🍁']:c.r==='N'?['🍁','🍂']:['🍁','✨','⭐','🍂']);
  checkNew();
 }
 function checkNew(){S.seen=S.seen||{};SECRETS.forEach(s=>{if(secretOK(s.id)&&!S.seen[s.id]){S.seen[s.id]=1;pending.push({k:'card',id:s.id});}});
@@ -571,7 +619,7 @@ function quizEnd(){const sc=Q.ok,best=Math.max(S.quizBest,sc),pf=sc===QUIZ.lengt
 async function albumItems(){const it=[];MISSIONS.forEach(m=>{if((m.type==='photo'||m.type==='review')&&S.done[m.id]&&(m.type==='photo'||S.done[m.id].photo))it.push({k:m.id,t:S.done[m.id].t,e:m.e,cap:m.t,r:m.r});});S.free.forEach(f=>it.push({k:f.k,t:f.t,e:'📷',cap:'フリー写真',r:'N'}));return it.sort((a,b)=>a.t-b.t);}
 async function renderAlbum(){const it=await albumItems();
  let h=`<h2 class="dg">アルバム <small>${it.length}枚</small></h2>
- <button class="btn red" data-result>🏆 結果発表モード</button><button class="btn" data-mem>🖼️ 思い出カードをつくる</button><button class="btn sub" data-free>📷 フリー写真を追加</button><div style="height:12px"></div>`;
+ <button class="btn red" data-result>🏆 結果発表モード</button><button class="btn" data-board>📊 3人の順位表</button><button class="btn" data-mem>🖼️ 思い出カードをつくる</button><button class="btn sub" data-free>📷 フリー写真を追加</button><div style="height:12px"></div>`;
  h+=it.length?`<div class="agrid">${it.map(x=>`<button data-photo="${x.k}" id="al-${x.k}"><span>${x.e}</span></button>`).join('')}</div>`:`<div class="empty">まだ写真がないよ。<br>ミッションで撮った写真がここにたまるよ📸<br>写真はこのスマホの中だけに保存されるよ。</div>`;
  $('#v-album').innerHTML=h;it.forEach(async x=>{const u=await photoURL(x.k);const el=document.getElementById('al-'+x.k);if(u&&el)el.style.backgroundImage=`url(${u})`;});}
 async function showPhoto(k){const u=await photoURL(k);const m=MISSIONS.find(x=>x.id===k),f=S.free.find(x=>x.k===k);
@@ -581,7 +629,20 @@ function showResult(){const p=points(),tt=titles().filter(t=>t.on);
   <div class="pt dg">${p}<span style="font-size:20px"> pt</span></div><div class="rk dg">${rank(p)}</div>
   <div class="zstat" style="margin-top:16px"><div><b class="dg">${ALLCARDS.filter(owned).length}</b><span>カード</span></div><div><b class="dg">${ALLCARDS.filter(c=>owned(c)&&(c.r==='SR'||c.r==='UR')).length}</b><span>キラ</span></div><div><b class="dg">${doneOrders()}</b><span>緊急指令</span></div><div><b class="dg">${S.quizBest}</b><span>クイズ</span></div></div>
   <div class="titles" style="justify-content:center">${tt.length?tt.map(t=>`<span class="title on">${t.e} ${t.t}</span>`).join(''):'<span class="rsub">称号はまだないよ</span>'}</div>
-  <div class="rsub" style="margin-top:14px">3人のスマホをならべて見せ合おう！</div></div>`,true);leaves(30,['🏆','✨','🍁']);chime([523,659,784,1047]);}
+  <div class="box" style="margin-top:14px;text-align:left"><b style="font-size:14px">🤫 じつは、ナイショ指令はこれでした！</b>${S.hid.map(ix=>`<div style="margin-top:8px;font-size:14px;line-height:1.5">${S.hidDone[ix]?'✅':'❌'} ${esc(HIDDEN[ix])}</div>`).join('')}</div>
+  <div class="rsub">親チャレンジ ${Object.keys(S.parent).length}/${PARENT.length}　🎰ラッキー ${MISSIONS.filter(m=>S.done[m.id]?.lucky&&isDone(m)).length}回</div>
+  <button class="btn" data-board>📊 3人の順位表へ</button></div>`,true);leaves(30,['🏆','✨','🍁']);chime([523,659,784,1047]);}
+function showBoard(done){const b=S.board||{},me={n:S.setup?.name||'自分',p:points(),me:1};
+ if(done&&b.a?.n&&b.b?.n){const L=[me,{...b.a},{...b.b}].sort((x,y)=>y.p-x.p);const md=['🥇','🥈','🥉'];
+  openSheet(`<button class="x" data-close>✕</button><h2 class="dg" style="margin-top:2px">📊 最終順位</h2>
+   ${L.map((r,i)=>`<div class="rank3" style="${i===0?'border:2px solid var(--gold)':''}"><div class="md">${md[i]}</div><div class="nm">${esc(r.n)}${r.me?'（自分）':''}</div><div class="pp dg">${r.p}pt</div></div>`).join('')}
+   <button class="btn sub" data-board>点数を入れなおす</button>`,true);leaves(40,['🏆','🥇','✨','🍁']);chime([523,659,784,1047,1319,1568]);return;}
+ openSheet(`<button class="x" data-close>✕</button><h2 class="dg" style="margin-top:2px">📊 3人の順位表</h2>
+  <div class="mdesc" style="text-align:left">ほかの2人の「結果発表モード」に出ている名前と点数を入れてね。</div>
+  <div class="rank3"><div class="nm">${esc(me.n)}（自分）</div><div class="pp dg">${me.p}pt</div></div>
+  <div class="rank3"><input class="inp" id="bA" placeholder="名前" value="${esc(b.a?.n||'')}" maxlength="10"><input class="inp pt" id="bAp" type="number" inputmode="numeric" placeholder="点数" value="${b.a?.p||''}"></div>
+  <div class="rank3"><input class="inp" id="bB" placeholder="名前" value="${esc(b.b?.n||'')}" maxlength="10"><input class="inp pt" id="bBp" type="number" inputmode="numeric" placeholder="点数" value="${b.b?.p||''}"></div>
+  <button class="btn red" data-boardsave>🏆 順位を発表！</button>`,true);}
 function loadImg(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src;});}
 function cover(x,img,a,b,w,h){const r=Math.max(w/img.width,h/img.height),sw=w/r,sh=h/r;x.drawImage(img,(img.width-sw)/2,(img.height-sh)/2,sw,sh,a,b,w,h);}
 function wrap(x,text,a,b,maxW,lh,maxL){const L=[];let l='';for(const ch of text){if(ch==='\n'){L.push(l);l='';continue;}if(x.measureText(l+ch).width>maxW){L.push(l);l=ch;}else l+=ch;}L.push(l);L.slice(0,maxL).forEach((s,i)=>x.fillText(i===maxL-1&&L.length>maxL?s.slice(0,-1)+'…':s,a,b+i*lh));}
@@ -634,18 +695,24 @@ document.addEventListener('click',async e=>{
  const t=e.target.closest('button');if(!t)return;const d=t.dataset;
  if(d.v){go(d.v);return;}
  if('close' in d){closeSheet();return;}
- if(d.tab){mTab=+d.tab;renderMission();return;}
+ if(d.tab){mTab=+d.tab;showHid=[false,false];renderMission();return;}
+ if(d.hidshow!==undefined){const i=+d.hidshow;showHid[i]=!showHid[i];renderMission();return;}
+ if('reconly' in d){recOnly=!recOnly;renderMission();return;}
+ if(d.hid!==undefined){const ix=+d.hid;S.hidDone[ix]=!S.hidDone[ix];save();renderAll();if(S.hidDone[ix]){openSheet(`<div style="font-size:70px">🤫</div><div class="rtitle dg">ナイショ指令 成功！</div><div class="rsub">+25pt　結果発表までヒミツにしておこう</div><button class="btn" data-close>OK</button>`,true);chime([392,523,659,784]);leaves(20,['🤫','✨']);}return;}
+ if(d.par){const id=d.par;if(S.parent[id]){delete S.parent[id];save();renderAll();toast('取り消したよ');}else{S.parent[id]=Date.now();save();renderAll();openSheet(`<div style="font-size:70px">👪</div><div class="rtitle dg">親チャレンジ成功！</div><div class="rsub">+10pt</div><button class="btn" data-close>OK</button>`,true);chime();leaves(20,['👪','✨']);}return;}
+ if('board' in d){showBoard();return;}
+ if('boardsave' in d){if(!$('#bA').value.trim()||!$('#bB').value.trim()){toast('2人の名前を入れてね');return;}S.board={a:{n:$('#bA').value.trim(),p:parseInt($('#bAp').value,10)||0},b:{n:$('#bB').value.trim(),p:parseInt($('#bBp').value,10)||0}};save();showBoard(true);return;}
  if(d.goph){const m=MISSIONS.find(x=>x.ph===d.goph);mTab=m.day;go('mission');setTimeout(()=>{const el=document.getElementById('ph-'+d.goph);if(el)el.scrollIntoView({block:'start'})},60);return;}
  if(d.m){openMission(d.m);return;}
  if('shoot' in d){fileTarget=curM.id;$('#fileIn').click();return;}
- if('savetxt' in d){const v=$('#txt').value.trim();if(!v){toast('なにか書いてね');return;}const f=!isDone(curM);S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),text:v};save();checkNew();cleared(curM,f);return;}
+ if('savetxt' in d){const v=$('#txt').value.trim();if(!v){toast('なにか書いてね');return;}const f=!isDone(curM),old=S.done[curM.id];S.done[curM.id]={t:old?.t||Date.now(),text:v};keepLuck(curM,old);save();checkNew();cleared(curM,f);return;}
  if(d.star){tmp.stars=+d.star;document.querySelectorAll('[data-star]').forEach(b=>b.classList.toggle('on',+b.dataset.star<=tmp.stars));return;}
  if('savereview' in d){const dish=$('#dish').value.trim(),tx=$('#txt').value.trim();if(!tmp.stars||!tx){toast('★とレビューを入れてね');return;}
-  const f=!isDone(curM),hasPhoto=!!(await getPhoto(curM.id));S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),stars:tmp.stars,dish,text:tx,photo:hasPhoto};save();checkNew();cleared(curM,f);return;}
- if(d.cnt){const before=isDone(curM);tmp.n=Math.max(0,Math.min(30,tmp.n+ +d.cnt));$('#cntv').textContent=tmp.n;S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),n:tmp.n};if(!tmp.n)delete S.done[curM.id];save();checkNew();renderAll();
-  if(!before&&isDone(curM)){reveal(curM.id);}else if(pending.length&&isDone(curM)){closeSheet();}return;}
+  const f=!isDone(curM),hasPhoto=!!(await getPhoto(curM.id)),old=S.done[curM.id];S.done[curM.id]={t:old?.t||Date.now(),stars:tmp.stars,dish,text:tx,photo:hasPhoto};keepLuck(curM,old);save();checkNew();cleared(curM,f);return;}
+ if(d.cnt){const before=isDone(curM);tmp.n=Math.max(0,Math.min(30,tmp.n+ +d.cnt));$('#cntv').textContent=tmp.n;{const old=S.done[curM.id];S.done[curM.id]={t:old?.t||Date.now(),n:tmp.n};keepLuck(curM,old);}if(!tmp.n)delete S.done[curM.id];save();checkNew();renderAll();
+  if(!before&&isDone(curM)){luck(curM);renderAll();reveal(curM.id);}else if(pending.length&&isDone(curM)){closeSheet();}return;}
  if('check' in d){S.done[curM.id]={t:Date.now()};save();checkNew();cleared(curM,true);return;}
- if('savenum' in d){const n=parseInt($('#num').value,10);if(!(n>0)){toast('記録を入れてね');return;}const f=!isDone(curM);S.done[curM.id]={t:S.done[curM.id]?.t||Date.now(),n};save();checkNew();cleared(curM,f);return;}
+ if('savenum' in d){const n=parseInt($('#num').value,10);if(!(n>0)){toast('記録を入れてね');return;}const f=!isDone(curM),old=S.done[curM.id];S.done[curM.id]={t:old?.t||Date.now(),n};keepLuck(curM,old);save();checkNew();cleared(curM,f);return;}
  if(d.card){showCard(d.card);return;}
  if(d.order){openOrder(d.order);return;}
  if(d.orderok){S.orders[d.orderok]=Date.now();save();checkNew();renderAll();openSheet(`<div style="font-size:70px">⚡</div><div class="rtitle dg">指令クリア！</div><div class="rsub">+15pt</div><button class="btn" data-close>OK</button>`,true);chime();leaves(24,['⚡','✨']);return;}
@@ -659,14 +726,14 @@ document.addEventListener('click',async e=>{
  if(d.delfree){S.free=S.free.filter(f=>f.k!==d.delfree);save();closeSheet();renderAlbum();toast('消したよ');return;}
  if('savesetup' in d){const n=$('#fN').value.trim();if(!n){toast('名前を入れてね');return;}const first=!S.setup;S.setup={name:n};save();closeSheet();renderAll();if(first){leaves(30);chime();toast('🍁 ゲームスタート！');}return;}
  if('reset' in d){if(!resetArm){resetArm=true;t.textContent='⚠️ もう一度押すと全部消えます';setTimeout(()=>resetArm=false,4000);return;}
-  resetArm=false;S=blank();save();await clearPhotos();Object.keys(urlCache).forEach(dropURL);pending=[];Q=null;closeSheet();renderAll();openSetup(true);return;}
+  resetArm=false;S=blank();ensureHid();save();await clearPhotos();Object.keys(urlCache).forEach(dropURL);pending=[];Q=null;closeSheet();renderAll();openSetup(true);return;}
  if(t.id==='gear'){openSetup(false);return;}
 });
 $('#ov').addEventListener('click',e=>{if(e.target.id==='ov'&&!$('#ov').classList.contains('center'))closeSheet();});
 
 /* ===================== 起動 ===================== */
 const h0=(location.hash||'').slice(1);if(['plan','mission','quiz','zukan','album'].includes(h0))cur=h0;
-go(cur);renderHeader();if(!S.setup)openSetup(true);
+ensureHid();go(cur);renderHeader();if(!S.setup)openSetup(true);
 let lastAct=activeOrder()?.id;
 setInterval(()=>{const a=activeOrder()?.id;if(a&&a!==lastAct){toast('⚡ 緊急指令が発令された！');chime([880,660,880,660]);}lastAct=a;
  if(!$('#ov').classList.contains('on')&&(cur==='plan'||cur==='mission'))renderView(cur);},30000);
